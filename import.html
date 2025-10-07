@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Importa in Tickness</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #fafafa;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 2rem;
+    }
+    code {
+      display: block;
+      margin-top: 1rem;
+      background: #eee;
+      padding: .5rem 1rem;
+      border-radius: 6px;
+      font-size: .9rem;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+<body>
+  <h1>Importazione in Tickness</h1>
+  <p>Se l'app Tickness è installata sul tuo dispositivo, si aprirà automaticamente.</p>
+  <p>In caso contrario, puoi copiare il link qui sotto ed aprirlo manualmente:</p>
+  <code id="deepLink"></code>
+
+  <script>
+    // Estrae il parametro "data" dalla query string
+    const params = new URLSearchParams(window.location.search);
+    const data = params.get('data');
+
+    if (!data) {
+      document.querySelector('#deepLink').textContent = "❌ Nessun parametro 'data' trovato.";
+    } else {
+      const deepLink = `tickness://import?data=${encodeURIComponent(data)}`;
+      document.querySelector('#deepLink').textContent = deepLink;
+
+      // Prova ad aprire direttamente il deep link
+      window.location.href = deepLink;
+
+      // Fallback: se non succede nulla in 2 secondi, mostra istruzioni
+      setTimeout(() => {
+        document.body.insertAdjacentHTML('beforeend', `
+          <p style="margin-top:1rem;color:#666">
+            Se nulla si è aperto, assicurati che l'app Tickness sia installata e riprova.
+          </p>
+        `);
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
