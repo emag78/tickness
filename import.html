@@ -26,6 +26,19 @@
       font-size: .9rem;
       overflow-wrap: anywhere;
     }
+    button {
+      margin-top: 1rem;
+      padding: .6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: #2b73ff;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1e5fe0;
+    }
   </style>
 </head>
 <body>
@@ -35,22 +48,26 @@
   <code id="deepLink"></code>
 
   <script>
-    // Recupera il parametro "data" dalla query string
     const params = new URLSearchParams(window.location.search);
     const data = params.get('data');
     const deepLinkEl = document.querySelector('#deepLink');
 
-    // Funzione per verificare se una stringa è probabilmente Base64 valida
+    function normalizeBase64(s) {
+      if (!s) return null;
+      return s
+        .trim()
+        .replace(/\s+/g, '')    // rimuove spazi e newline
+        .replace(/-/g, '+')     // compatibilità URL-safe
+        .replace(/_/g, '/');
+    }
+
     function isValidBase64(str) {
       if (!str) return false;
-      // Caratteri ammessi + lunghezza multipla di 4
-      if (!/^[A-Za-z0-9+/=]+$/.test(str)) return false;
-      if (str.length % 4 !== 0) return false;
+      const normalized = normalizeBase64(str);
+      if (normalized.length % 4 !== 0) return false;
       try {
-        // Prova una decodifica base64
-        const decoded = atob(str);
-        // Verifica che la decodifica restituisca qualcosa di leggibile
-        return decoded.length > 0;
+        atob(normalized);
+        return true;
       } catch {
         return false;
       }
@@ -59,7 +76,6 @@
     if (!data) {
       deepLinkEl.textContent = "❌ Nessun parametro 'data' trovato.";
     } else if (!isValidBase64(data)) {
-      // Messaggio per link incompleto o tagliato
       deepLinkEl.textContent = "⚠️ Il link di importazione sembra incompleto.";
       document.body.insertAdjacentHTML('beforeend', `
         <p style="margin-top:1rem;color:#666;max-width:480px;">
@@ -69,15 +85,27 @@
         </p>
       `);
     } else {
-      // Costruisci e mostra il deep link corretto
-      const deepLink = \`tickness://import?data=\${encodeURIComponent(data)}\`;
+      const normalized = normalizeBase64(data);
+      const deepLink = `tickness://import?data=${encodeURIComponent(normalized)}`;
       deepLinkEl.textContent = deepLink;
 
-      // Prova ad aprire direttamente l’app
+      // Mostra feedback immediato
+      const message = document.createElement('p');
+      message.textContent = "⏳ Tentativo di apertura in corso...";
+      message.style.color = "#666";
+      document.body.appendChild(message);
+
+      // Tenta apertura automatica
       window.location.href = deepLink;
 
-      // Messaggio di fallback se l'app non si apre entro 2 secondi
+      // Fallback dopo 2 secondi
       setTimeout(() => {
+        message.textContent = "⚠️ Se l'app non si è aperta automaticamente, puoi provare manualmente:";
+        const button = document.createElement('button');
+        button.textContent = "Apri in Tickness";
+        button.onclick = () => (window.location.href = deepLink);
+        document.body.appendChild(button);
+
         document.body.insertAdjacentHTML('beforeend', `
           <p style="margin-top:1rem;color:#666">
             Se nulla si è aperto, assicurati che l'app <strong>Tickness</strong> sia installata e riprova.
