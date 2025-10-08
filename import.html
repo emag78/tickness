@@ -35,24 +35,52 @@
   <code id="deepLink"></code>
 
   <script>
-    // Estrae il parametro "data" dalla query string
+    // Recupera il parametro "data" dalla query string
     const params = new URLSearchParams(window.location.search);
     const data = params.get('data');
+    const deepLinkEl = document.querySelector('#deepLink');
+
+    // Funzione per verificare se una stringa è probabilmente Base64 valida
+    function isValidBase64(str) {
+      if (!str) return false;
+      // Caratteri ammessi + lunghezza multipla di 4
+      if (!/^[A-Za-z0-9+/=]+$/.test(str)) return false;
+      if (str.length % 4 !== 0) return false;
+      try {
+        // Prova una decodifica base64
+        const decoded = atob(str);
+        // Verifica che la decodifica restituisca qualcosa di leggibile
+        return decoded.length > 0;
+      } catch {
+        return false;
+      }
+    }
 
     if (!data) {
-      document.querySelector('#deepLink').textContent = "❌ Nessun parametro 'data' trovato.";
+      deepLinkEl.textContent = "❌ Nessun parametro 'data' trovato.";
+    } else if (!isValidBase64(data)) {
+      // Messaggio per link incompleto o tagliato
+      deepLinkEl.textContent = "⚠️ Il link di importazione sembra incompleto.";
+      document.body.insertAdjacentHTML('beforeend', `
+        <p style="margin-top:1rem;color:#666;max-width:480px;">
+          Torna alla chat dell'assistente <strong>Tickness</strong> e attendi che 
+          scompaia il pulsante rosso <strong>“Stop”</strong> prima di cliccare di nuovo il link.  
+          Così sarai sicuro che il link sia stato generato completamente ✅
+        </p>
+      `);
     } else {
-      const deepLink = `tickness://import?data=${encodeURIComponent(data)}`;
-      document.querySelector('#deepLink').textContent = deepLink;
+      // Costruisci e mostra il deep link corretto
+      const deepLink = \`tickness://import?data=\${encodeURIComponent(data)}\`;
+      deepLinkEl.textContent = deepLink;
 
-      // Prova ad aprire direttamente il deep link
+      // Prova ad aprire direttamente l’app
       window.location.href = deepLink;
 
-      // Fallback: se non succede nulla in 2 secondi, mostra istruzioni
+      // Messaggio di fallback se l'app non si apre entro 2 secondi
       setTimeout(() => {
         document.body.insertAdjacentHTML('beforeend', `
           <p style="margin-top:1rem;color:#666">
-            Se nulla si è aperto, assicurati che l'app Tickness sia installata e riprova.
+            Se nulla si è aperto, assicurati che l'app <strong>Tickness</strong> sia installata e riprova.
           </p>
         `);
       }, 2000);
