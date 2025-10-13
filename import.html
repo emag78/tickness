@@ -44,7 +44,6 @@
 <body>
   <h1>Importazione dati su Tickness</h1>
   <p>Se l'app Tickness è installata sul tuo dispositivo, si aprirà automaticamente.</p>
-  <code id="deepLink"></code>
 
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -86,7 +85,6 @@
     } else {
       const normalized = normalizeBase64(data);
       const deepLink = `tickness://import?data=${encodeURIComponent(normalized)}`;
-      deepLinkEl.textContent = deepLink;
 
       // Mostra feedback immediato
       const message = document.createElement('p');
