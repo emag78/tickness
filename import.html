@@ -35,29 +35,32 @@
       color: white;
       font-size: 1rem;
       cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.5s ease;
     }
     button:hover {
       background: #1e5fe0;
+    }
+    button.visible {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
   <h1>Importazione dati su Tickness</h1>
   <p>Se l'app Tickness è installata sul tuo dispositivo, si aprirà automaticamente.</p>
-  <p id="deepLink"></p>
+  <p id="status" style="color:#666; margin-top:1rem;"></p>
+  <button id="openBtn">Apri manualmente in Tickness</button>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const data = params.get('data');
-    const deepLinkEl = document.querySelector('#deepLink');
+    const statusEl = document.getElementById('status');
+    const button = document.getElementById('openBtn');
 
     function normalizeBase64(s) {
       if (!s) return null;
-      return s
-        .trim()
-        .replace(/\s+/g, '')    // rimuove spazi e newline
-        .replace(/-/g, '+')     // compatibilità URL-safe
-        .replace(/_/g, '/');
+      return s.trim().replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
     }
 
     function isValidBase64(str) {
@@ -73,9 +76,9 @@
     }
 
     if (!data) {
-      deepLinkEl.textContent = "❌ Nessun parametro 'data' trovato.";
+      statusEl.textContent = "❌ Nessun parametro 'data' trovato.";
     } else if (!isValidBase64(data)) {
-      deepLinkEl.textContent = "⚠️ Il link di importazione sembra incompleto.";
+      statusEl.textContent = "⚠️ Il link di importazione sembra incompleto.";
       document.body.insertAdjacentHTML('beforeend', `
         <p style="margin-top:1rem;color:#666;max-width:480px;">
           Torna alla chat dell'assistente <strong>Tickness</strong> e attendi che 
@@ -87,22 +90,14 @@
       const normalized = normalizeBase64(data);
       const deepLink = `tickness://import?data=${encodeURIComponent(normalized)}`;
 
-      // Mostra feedback immediato
-      const message = document.createElement('p');
-      message.textContent = "⏳ Tentativo di apertura in corso...";
-      message.style.color = "#666";
-      document.body.appendChild(message);
-
-      // Tenta apertura automatica
+      statusEl.textContent = "⏳ Tentativo di apertura in corso...";
       window.location.href = deepLink;
 
-      // Fallback dopo 2 secondi
+      // mostra pulsante manuale dopo 2 secondi
       setTimeout(() => {
-        message.textContent = "⚠️ Se l'app non si è aperta automaticamente, puoi provare manualmente:";
-        const button = document.createElement('button');
-        button.textContent = "Apri in Tickness";
+        statusEl.textContent = "⚠️ Se l'app non si è aperta automaticamente, prova qui sotto:";
+        button.classList.add('visible');
         button.onclick = () => (window.location.href = deepLink);
-        document.body.appendChild(button);
 
         document.body.insertAdjacentHTML('beforeend', `
           <p style="margin-top:1rem;color:#666">
