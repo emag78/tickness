@@ -75,6 +75,28 @@
       }
     }
 
+    function sanitizePayload(base64) {
+      try {
+        const decoded = atob(base64);
+        const json = JSON.parse(decoded);
+
+        // azzera categories se esiste
+        if (Array.isArray(json.categories)) {
+          json.categories = [];
+        }
+
+        // anche se è dentro payload o livelli più profondi
+        if (json.payload && Array.isArray(json.payload.categories)) {
+          json.payload.categories = [];
+        }
+
+        // ri-serializza
+        return btoa(JSON.stringify(json));
+      } catch {
+        return base64; // fallback se qualcosa va storto
+      }
+    }
+
     if (!data) {
       statusEl.textContent = "❌ Nessun parametro 'data' trovato.";
     } else if (!isValidBase64(data)) {
@@ -88,7 +110,8 @@
       `);
     } else {
       const normalized = normalizeBase64(data);
-      const deepLink = `tickness://import?data=${encodeURIComponent(normalized)}`;
+      const sanitized = sanitizePayload(normalized);
+      const deepLink = `tickness://import?data=${encodeURIComponent(sanitized)}`;
 
       statusEl.textContent = "⏳ Tentativo di apertura in corso...";
       window.location.href = deepLink;
