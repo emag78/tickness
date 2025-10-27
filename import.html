@@ -55,8 +55,11 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const data = params.get('data');
+    const guid = params.get('id'); // 👈 nuovo parametro supportato
     const statusEl = document.getElementById('status');
     const button = document.getElementById('openBtn');
+
+    const LAMBDA_URL = "https://kjt301vlui.execute-api.eu-central-1.amazonaws.com/"; // 👈 tua Lambda
 
     function normalizeBase64(s) {
       if (!s) return null;
@@ -80,39 +83,21 @@
         const decoded = atob(base64);
         const json = JSON.parse(decoded);
 
-        // azzera categories se esiste
-        if (Array.isArray(json.categories)) {
-          json.categories = [];
-        }
-
-        // anche se è dentro payload o livelli più profondi
+        if (Array.isArray(json.categories)) json.categories = [];
         if (json.payload && Array.isArray(json.payload.categories)) {
           json.payload.categories = [];
         }
 
-        // ri-serializza
         return btoa(JSON.stringify(json));
       } catch {
-        return base64; // fallback se qualcosa va storto
+        return base64;
       }
     }
 
-    if (!data) {
-      statusEl.textContent = "❌ Nessun parametro 'data' trovato.";
-    } else if (!isValidBase64(data)) {
-      statusEl.textContent = "⚠️ Il link di importazione sembra incompleto.";
-      document.body.insertAdjacentHTML('beforeend', `
-        <p style="margin-top:1rem;color:#666;max-width:480px;">
-          Torna alla chat dell'assistente <strong>Tickness</strong> e attendi che 
-          scompaia il pulsante rosso <strong>“Stop”</strong> prima di cliccare di nuovo il link.  
-          Così sarai sicuro che il link sia stato generato completamente ✅
-        </p>
-      `);
-    } else {
-      const normalized = normalizeBase64(data);
-      const sanitized = sanitizePayload(normalized);
+    // 🔹 funzione comune per aprire deep link e gestire fallback
+    function openInApp(base64) {
+      const sanitized = sanitizePayload(normalizeBase64(base64));
       const deepLink = `tickness://import?data=${encodeURIComponent(sanitized)}`;
-
       statusEl.textContent = "⏳ Tentativo di apertura in corso...";
       window.location.href = deepLink;
 
@@ -121,13 +106,48 @@
         statusEl.textContent = "⚠️ Se l'app non si è aperta automaticamente, prova qui sotto:";
         button.classList.add('visible');
         button.onclick = () => (window.location.href = deepLink);
-
         document.body.insertAdjacentHTML('beforeend', `
           <p style="margin-top:1rem;color:#666">
             Se nulla si è aperto, assicurati che l'app <strong>Tickness</strong> sia installata e riprova.
           </p>
         `);
       }, 2000);
+    }
+
+    // 🔸 1. Se arriva il parametro data → comportamento classico
+    if (data) {
+      if (!isValidBase64(data)) {
+        statusEl.textContent = "⚠️ Il link di importazione sembra incompleto.";
+        document.body.insertAdjacentHTML('beforeend', `
+          <p style="margin-top:1rem;color:#666;max-width:480px;">
+            Torna alla chat dell'assistente <strong>Tickness</strong> e attendi che 
+            scompaia il pulsante rosso <strong>“Stop”</strong> prima di cliccare di nuovo il link.  
+            Così sarai sicuro che il link sia stato generato completamente ✅
+          </p>
+        `);
+      } else {
+        openInApp(data);
+      }
+
+    // 🔸 2. Se arriva il parametro id → nuova modalità con Lambda
+    } else if (guid) {
+      statusEl.textContent = "🔄 Recupero dei dati, attendi...";
+      fetch(`${LAMBDA_URL}?id=${encodeURIComponent(guid)}`)
+        .then(res => res.json())
+        .then(result => {
+          if (!result.payload) throw new Error("Nessun payload trovato o link scaduto.");
+          openInApp(result.payload);
+        })
+        .catch(err => {
+          statusEl.textContent = "❌ Errore durante il recupero dei dati: " + err.message;
+          document.body.insertAdjacentHTML('beforeend', `
+            <p style="margin-top:1rem;color:#666">Il link potrebbe essere scaduto o non valido.</p>
+          `);
+        });
+
+    // 🔸 3. Nessun parametro valido
+    } else {
+      statusEl.textContent = "❌ Nessun parametro 'data' o 'id' trovato.";
     }
   </script>
 </body>
