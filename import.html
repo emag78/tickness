@@ -132,7 +132,9 @@
     // 🔸 2. Se arriva il parametro id → nuova modalità con Lambda
     } else if (guid) {
       statusEl.textContent = "🔄 Recupero dei dati, attendi...";
-      fetch(`${LAMBDA_URL}?id=${encodeURIComponent(guid)}`)
+      fetch(`${LAMBDA_URL}?id=${encodeURIComponent(guid)}`, {
+        headers: { "X-Tickness-Client": "ImportPage" }
+      })
         .then(res => res.json())
         .then(result => {
           if (!result.payload) throw new Error("Nessun payload trovato o link scaduto.");
