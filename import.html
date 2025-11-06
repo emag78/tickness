@@ -55,11 +55,9 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const data = params.get('data');
-    const guid = params.get('id'); // 👈 nuovo parametro supportato
+    const guid = params.get('id');
     const statusEl = document.getElementById('status');
     const button = document.getElementById('openBtn');
-
-    const LAMBDA_URL = "https://zctszpctwjil44wks4jf6jtu6y0khtfd.lambda-url.eu-central-1.on.aws";
 
     function normalizeBase64(s) {
       if (!s) return null;
@@ -82,26 +80,31 @@
       try {
         const decoded = atob(base64);
         const json = JSON.parse(decoded);
-
         if (Array.isArray(json.categories)) json.categories = [];
         if (json.payload && Array.isArray(json.payload.categories)) {
           json.payload.categories = [];
         }
-
         return btoa(JSON.stringify(json));
       } catch {
         return base64;
       }
     }
 
-    // 🔹 funzione comune per aprire deep link e gestire fallback
-    function openInApp(base64) {
+    function openInAppWithData(base64) {
       const sanitized = sanitizePayload(normalizeBase64(base64));
       const deepLink = `tickness://import?data=${encodeURIComponent(sanitized)}`;
+      redirectToApp(deepLink);
+    }
+
+    function openInAppWithGuid(guid) {
+      const deepLink = `tickness://import?id=${encodeURIComponent(guid)}`;
+      redirectToApp(deepLink);
+    }
+
+    function redirectToApp(deepLink) {
       statusEl.textContent = "⏳ Tentativo di apertura in corso...";
       window.location.href = deepLink;
 
-      // mostra pulsante manuale dopo 2 secondi
       setTimeout(() => {
         statusEl.textContent = "⚠️ Se l'app non si è aperta automaticamente, prova qui sotto:";
         button.classList.add('visible');
@@ -114,7 +117,7 @@
       }, 2000);
     }
 
-    // 🔸 1. Se arriva il parametro data → comportamento classico
+    // 🔸 Gestione dei parametri
     if (data) {
       if (!isValidBase64(data)) {
         statusEl.textContent = "⚠️ Il link di importazione sembra incompleto.";
@@ -126,28 +129,13 @@
           </p>
         `);
       } else {
-        openInApp(data);
+        openInAppWithData(data);
       }
 
-    // 🔸 2. Se arriva il parametro id → nuova modalità con Lambda
     } else if (guid) {
-      statusEl.textContent = "🔄 Recupero dei dati, attendi...";
-      fetch(`${LAMBDA_URL}?id=${encodeURIComponent(guid)}`, {
-        headers: { "X-Tickness-Client": "ImportPage" }
-      })
-        .then(res => res.json())
-        .then(result => {
-          if (!result.payload) throw new Error("Nessun payload trovato o link scaduto.");
-          openInApp(result.payload);
-        })
-        .catch(err => {
-          statusEl.textContent = "❌ Errore durante il recupero dei dati: " + err.message;
-          document.body.insertAdjacentHTML('beforeend', `
-            <p style="margin-top:1rem;color:#666">Il link potrebbe essere scaduto o non valido.</p>
-          `);
-        });
+      // 🔹 nuova logica: reindirizzo diretto, senza Lambda
+      openInAppWithGuid(guid);
 
-    // 🔸 3. Nessun parametro valido
     } else {
       statusEl.textContent = "❌ Nessun parametro 'data' o 'id' trovato.";
     }
