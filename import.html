@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Importa in Tickness</title>
+  <title>Import into Tickness</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -47,10 +47,10 @@
   </style>
 </head>
 <body>
-  <h1>Importazione dati su Tickness</h1>
-  <p>Se l'app Tickness è installata sul tuo dispositivo, si aprirà automaticamente.</p>
+  <h1>Data Import into Tickness</h1>
+  <p>If the Tickness app is installed on your device, it should open automatically.</p>
   <p id="status" style="color:#666; margin-top:1rem;"></p>
-  <button id="openBtn">Apri manualmente in Tickness</button>
+  <button id="openBtn">Open Tickness manually</button>
 
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -101,83 +101,60 @@
       redirectToApp(deepLink);
     }
 
+    function showInstallInfo() {
+      document.body.insertAdjacentHTML('beforeend', `
+        <p style="margin-top:1rem;color:#666">
+          If nothing opened, make sure the <strong>Tickness</strong> app is installed.
+        </p>
+
+        <div style="margin-top:1.5rem; font-size:1rem; color:#444;">
+          <strong>📲 Don’t have the app yet?</strong><br>
+          Download it here:
+        </div>
+
+        <div class="store-badges" style="margin-top:1rem; text-align:center;">
+          <a href="https://apps.apple.com/it/app/tickness/id6749477728"
+             target="_blank" rel="noopener noreferrer">
+            <img src="app-store-badge.svg"
+                 alt="Download on the App Store"
+                 style="height:55px; margin:6px;">
+          </a>
+
+          <a href="https://play.google.com/store/apps/details?id=com.enricomagrella.tickness"
+             target="_blank" rel="noopener noreferrer">
+            <img src="google-play-badge.svg"
+                 alt="Get it on Google Play"
+                 style="height:55px; margin:6px;">
+          </a>
+        </div>
+      `);
+    }
+
     function redirectToApp(deepLink) {
-      statusEl.textContent = "⏳ Tentativo di apertura in corso...";
+      statusEl.textContent = "⏳ Attempting to open the app...";
       window.location.href = deepLink;
 
       setTimeout(() => {
-        statusEl.textContent = "⚠️ Se l'app non si è aperta automaticamente, prova qui sotto:";
+        statusEl.textContent = "⚠️ If the app did not open automatically, try below:";
         button.classList.add('visible');
         button.onclick = () => (window.location.href = deepLink);
-        document.body.insertAdjacentHTML('beforeend', `
-          <p style="margin-top:1rem;color:#666">
-            Se nulla si è aperto, assicurati che l'app <strong>Tickness</strong> sia installata.
-          </p>
-          
-          <div style="margin-top:1.5rem; font-size:1rem; color:#444;">
-            <strong>📲 Non hai ancora installato l’app?</strong><br>
-            Puoi scaricarla qui:
-          </div>
-          
-          <div class="store-badges" style="margin-top:1rem; text-align:center;">
-            <a href="https://apps.apple.com/it/app/tickness/id6749477728"
-               target="_blank" rel="noopener noreferrer">
-              <img src="app-store-badge-it.svg"
-                   alt="Scarica su App Store"
-                   style="height:55px; margin:6px;">
-            </a>
-          
-            <a href="https://play.google.com/store/apps/details?id=com.enricomagrella.tickness"
-               target="_blank" rel="noopener noreferrer">
-              <img src="google-play-badge-it.svg"
-                   alt="Disponibile su Google Play"
-                   style="height:55px; margin:6px;">
-            </a>
-          </div>        
-        `);
+        showInstallInfo();
       }, 2000);
     }
 
-    // 🔸 Gestione dei parametri
     if (data) {
       if (!isValidBase64(data)) {
-        statusEl.textContent = "⚠️ Il link di importazione sembra incompleto.";
-        document.body.insertAdjacentHTML('beforeend', `
-          <p style="margin-top:1rem;color:#666">
-            Se nulla si è aperto, assicurati che l'app <strong>Tickness</strong> sia installata.
-          </p>
-          
-          <div style="margin-top:1.5rem; font-size:1rem; color:#444;">
-            <strong>📲 Non hai ancora installato l’app?</strong><br>
-            Puoi scaricarla qui:
-          </div>
-          
-          <div class="store-badges" style="margin-top:1rem; text-align:center;">
-            <a href="https://apps.apple.com/it/app/tickness/id6749477728"
-               target="_blank" rel="noopener noreferrer">
-              <img src="app-store-badge-it.svg"
-                   alt="Scarica su App Store"
-                   style="height:55px; margin:6px;">
-            </a>
-          
-            <a href="https://play.google.com/store/apps/details?id=com.enricomagrella.tickness"
-               target="_blank" rel="noopener noreferrer">
-              <img src="google-play-badge-it.svg"
-                   alt="Disponibile su Google Play"
-                   style="height:55px; margin:6px;">
-            </a>
-          </div>        
-          `);
+        statusEl.textContent = "⚠️ The import link appears incomplete.";
+        showInstallInfo();
       } else {
         openInAppWithData(data);
       }
 
     } else if (guid) {
-      // 🔹 nuova logica: reindirizzo diretto, senza Lambda
       openInAppWithGuid(guid);
 
     } else {
-      statusEl.textContent = "❌ Nessun parametro 'data' o 'id' trovato.";
+      statusEl.textContent = "❌ No 'data' or 'id' parameter found.";
     }
   </script>
 </body>
