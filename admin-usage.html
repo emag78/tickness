@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Tickness Admin Usage</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef6fb;
+      --surface: #ffffff;
+      --surface-soft: #f7fbfd;
+      --text: #1f2933;
+      --muted: #617080;
+      --line: #d9e6ee;
+      --accent: #1f7fbf;
+      --accent-dark: #155d8d;
+      --danger: #b42318;
+      --success: #0f766e;
+      --shadow: 0 10px 28px rgba(31, 63, 91, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      line-height: 1.2;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 2px;
+    }
+
+    main {
+      padding: 24px 0 40px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.4fr) repeat(2, minmax(150px, 0.75fr)) auto auto;
+      gap: 12px;
+      padding: 16px;
+      align-items: end;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      padding: 9px 11px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(31, 127, 191, 0.14);
+    }
+
+    .save-token {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+
+    .save-token input {
+      width: 16px;
+      min-height: 16px;
+      accent-color: var(--accent);
+    }
+
+    button {
+      min-height: 42px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      padding: 0 18px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--accent-dark);
+    }
+
+    button:disabled {
+      cursor: progress;
+      opacity: 0.68;
+    }
+
+    .status {
+      margin: 16px 0;
+      min-height: 20px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .status.error {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .status.ok {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi {
+      padding: 14px;
+    }
+
+    .kpi-title {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      min-height: 32px;
+    }
+
+    .kpi-value {
+      margin-top: 8px;
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .chart-card {
+      padding: 14px;
+      min-height: 300px;
+    }
+
+    .chart-title {
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .chart-box {
+      height: 240px;
+    }
+
+    .table-card {
+      overflow: hidden;
+    }
+
+    .table-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .table-head h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: var(--surface);
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th:first-child,
+    td:first-child {
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      background: var(--surface-soft);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .empty {
+      padding: 28px 16px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .kpis {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .charts {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wrap {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        padding: 12px 0;
+      }
+
+      .controls,
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-title {
+        min-height: 0;
+      }
+
+      .save-token {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap topbar">
+      <div class="brand">
+        <img src="tick.png" alt="Tickness">
+        <div>
+          <h1>Tickness Admin Usage</h1>
+          <div class="subtitle">AWS daily usage</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel controls" aria-label="Filtri">
+      <label>
+        Token
+        <input id="token" type="password" autocomplete="current-password" placeholder="x-admin-token">
+      </label>
+      <label>
+        From
+        <input id="fromDate" type="date">
+      </label>
+      <label>
+        To
+        <input id="toDate" type="date">
+      </label>
+      <label class="save-token">
+        <input id="saveToken" type="checkbox">
+        <span>Salva token</span>
+      </label>
+      <button id="refresh" type="button">Refresh</button>
+    </section>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+
+    <section class="kpis" aria-label="KPI">
+      <article class="panel kpi">
+        <div class="kpi-title">Costo totale range</div>
+        <div id="totalCost" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Costo medio giornaliero</div>
+        <div id="averageCost" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">API requests totali</div>
+        <div id="apiRequests" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Lambda invocations totali</div>
+        <div id="lambdaInvocations" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">WebSocket connections totali</div>
+        <div id="websocketConnections" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">CloudWatch logs bytes totali</div>
+        <div id="cloudWatchBytes" class="kpi-value">-</div>
+      </article>
+    </section>
+
+    <section class="charts" aria-label="Grafici">
+      <article class="panel chart-card">
+        <div class="chart-title">Costo giornaliero</div>
+        <div class="chart-box"><canvas id="costChart"></canvas></div>
+      </article>
+      <article class="panel chart-card">
+        <div class="chart-title">API requests giornaliere</div>
+        <div class="chart-box"><canvas id="apiChart"></canvas></div>
+      </article>
+      <article class="panel chart-card">
+        <div class="chart-title">Lambda invocations giornaliere</div>
+        <div class="chart-box"><canvas id="lambdaChart"></canvas></div>
+      </article>
+    </section>
+
+    <section class="panel table-card" aria-label="Tabella giornaliera">
+      <div class="table-head">
+        <h2>Dettaglio giornaliero</h2>
+        <span id="rowCount" class="subtitle">0 giorni</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Costo totale</th>
+              <th>API requests</th>
+              <th>Lambda invocations</th>
+              <th>WebSocket connections</th>
+              <th>CloudWatch bytes</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty" hidden>Nessun dato nel range selezionato.</div>
+    </section>
+  </main>
+
+  <script>
+    const API_URL = "https://icudn4ttcj.execute-api.eu-central-1.amazonaws.com/admin/usage-stats";
+    const TOKEN_STORAGE_KEY = "ticknessAdminUsageToken";
+
+    const els = {
+      token: document.getElementById("token"),
+      saveToken: document.getElementById("saveToken"),
+      fromDate: document.getElementById("fromDate"),
+      toDate: document.getElementById("toDate"),
+      refresh: document.getElementById("refresh"),
+      status: document.getElementById("status"),
+      totalCost: document.getElementById("totalCost"),
+      averageCost: document.getElementById("averageCost"),
+      apiRequests: document.getElementById("apiRequests"),
+      lambdaInvocations: document.getElementById("lambdaInvocations"),
+      websocketConnections: document.getElementById("websocketConnections"),
+      cloudWatchBytes: document.getElementById("cloudWatchBytes"),
+      tableBody: document.getElementById("tableBody"),
+      emptyState: document.getElementById("emptyState"),
+      rowCount: document.getElementById("rowCount")
+    };
+
+    const charts = {};
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setDefaultDates();
+      restoreToken();
+      els.refresh.addEventListener("click", loadStats);
+      els.saveToken.addEventListener("change", persistTokenPreference);
+      els.token.addEventListener("input", persistTokenPreference);
+    });
+
+    function setDefaultDates() {
+      const to = new Date();
+      const from = new Date(to);
+      from.setDate(to.getDate() - 29);
+      els.fromDate.value = toDateInputValue(from);
+      els.toDate.value = toDateInputValue(to);
+    }
+
+    function restoreToken() {
+      const savedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
+      if (savedToken) {
+        els.token.value = savedToken;
+        els.saveToken.checked = true;
+      }
+    }
+
+    function persistTokenPreference() {
+      if (els.saveToken.checked && els.token.value.trim()) {
+        localStorage.setItem(TOKEN_STORAGE_KEY, els.token.value.trim());
+      } else {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+      }
+    }
+
+    async function loadStats() {
+      const token = els.token.value.trim();
+      const from = els.fromDate.value;
+      const to = els.toDate.value;
+
+      if (!token) {
+        showStatus("Inserisci il token admin.", "error");
+        return;
+      }
+
+      if (!from || !to || from > to) {
+        showStatus("Seleziona un range date valido.", "error");
+        return;
+      }
+
+      persistTokenPreference();
+      setLoading(true);
+      showStatus("Caricamento...", "");
+
+      try {
+        const url = new URL(API_URL);
+        url.searchParams.set("from", from);
+        url.searchParams.set("to", to);
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "x-admin-token": token
+          }
+        });
+
+        if (response.status === 401) {
+          throw new Error("Token non valido.");
+        }
+
+        if (!response.ok) {
+          throw new Error(`API non disponibile (${response.status}).`);
+        }
+
+        const payload = await response.json();
+        const items = Array.isArray(payload.items) ? payload.items : [];
+        render(items);
+        showStatus(items.length ? `Aggiornato: ${items.length} giorni.` : "Nessun dato nel range selezionato.", items.length ? "ok" : "");
+      } catch (err) {
+        render([]);
+        showStatus(normalizeError(err), "error");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function render(items) {
+      const normalized = items.map(normalizeItem).sort((a, b) => a.date.localeCompare(b.date));
+      renderKpis(normalized);
+      renderCharts(normalized);
+      renderTable(normalized);
+    }
+
+    function normalizeItem(item) {
+      return {
+        date: item.date || "",
+        cost: numberValue(item.estimatedCostUsdDailyTotal),
+        apiRequests: numberValue(item.apiGatewayRequestsTotal),
+        lambdaInvocations: numberValue(item.lambdaInvocationsTotal),
+        websocketConnections: numberValue(item.websocketConnectionsTotal),
+        cloudWatchBytes: numberValue(item.cloudWatchLogsBytesTotal ?? item.cloudWatchLogsIngestedBytesTotal ?? item.cloudWatchBytesTotal)
+      };
+    }
+
+    function renderKpis(items) {
+      const totalCost = sum(items, "cost");
+      const daysWithCost = items.filter((item) => item.cost !== null).length;
+      const averageCost = daysWithCost ? totalCost / daysWithCost : null;
+
+      els.totalCost.textContent = money(totalCost);
+      els.averageCost.textContent = averageCost === null ? "n/d" : money(averageCost);
+      els.apiRequests.textContent = integer(sum(items, "apiRequests"));
+      els.lambdaInvocations.textContent = integer(sum(items, "lambdaInvocations"));
+      els.websocketConnections.textContent = integer(sum(items, "websocketConnections"));
+      els.cloudWatchBytes.textContent = formatBytes(sumOrNull(items, "cloudWatchBytes"));
+    }
+
+    function renderCharts(items) {
+      if (typeof Chart === "undefined") {
+        return;
+      }
+
+      const labels = items.map((item) => item.date);
+      upsertChart("costChart", "cost", labels, items.map((item) => item.cost ?? 0), "#1f7fbf");
+      upsertChart("apiChart", "api", labels, items.map((item) => item.apiRequests ?? 0), "#0f766e");
+      upsertChart("lambdaChart", "lambda", labels, items.map((item) => item.lambdaInvocations ?? 0), "#7c3aed");
+    }
+
+    function upsertChart(canvasId, key, labels, data, color) {
+      const config = {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            data,
+            borderColor: color,
+            backgroundColor: `${color}22`,
+            borderWidth: 2,
+            pointRadius: 2,
+            pointHoverRadius: 4,
+            tension: 0.25,
+            fill: true
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: { mode: "index", intersect: false }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 6 }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0 }
+            }
+          }
+        }
+      };
+
+      if (charts[key]) {
+        charts[key].data.labels = labels;
+        charts[key].data.datasets[0].data = data;
+        charts[key].update();
+        return;
+      }
+
+      charts[key] = new Chart(document.getElementById(canvasId), config);
+    }
+
+    function renderTable(items) {
+      els.tableBody.innerHTML = "";
+      els.emptyState.hidden = items.length !== 0;
+      els.rowCount.textContent = `${items.length} ${items.length === 1 ? "giorno" : "giorni"}`;
+
+      const fragment = document.createDocumentFragment();
+      for (const item of items) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${escapeHtml(item.date)}</td>
+          <td>${money(item.cost)}</td>
+          <td>${integer(item.apiRequests)}</td>
+          <td>${integer(item.lambdaInvocations)}</td>
+          <td>${integer(item.websocketConnections)}</td>
+          <td>${formatBytes(item.cloudWatchBytes)}</td>
+        `;
+        fragment.appendChild(row);
+      }
+      els.tableBody.appendChild(fragment);
+    }
+
+    function setLoading(isLoading) {
+      els.refresh.disabled = isLoading;
+      els.refresh.textContent = isLoading ? "Loading..." : "Refresh";
+    }
+
+    function showStatus(message, type) {
+      els.status.textContent = message;
+      els.status.className = `status ${type || ""}`.trim();
+    }
+
+    function normalizeError(err) {
+      if (err instanceof TypeError) {
+        return "Errore rete o CORS. Verifica connessione e origine autorizzata.";
+      }
+      return err.message || "Errore API.";
+    }
+
+    function sum(items, key) {
+      return items.reduce((total, item) => total + (item[key] ?? 0), 0);
+    }
+
+    function sumOrNull(items, key) {
+      const values = items.map((item) => item[key]).filter((value) => value !== null);
+      if (!values.length) {
+        return null;
+      }
+      return values.reduce((total, value) => total + value, 0);
+    }
+
+    function numberValue(value) {
+      return typeof value === "number" && Number.isFinite(value) ? value : null;
+    }
+
+    function money(value) {
+      if (value === null || value === undefined) {
+        return "n/d";
+      }
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 4
+      }).format(value);
+    }
+
+    function integer(value) {
+      if (value === null || value === undefined) {
+        return "n/d";
+      }
+      return new Intl.NumberFormat("it-IT", { maximumFractionDigits: 0 }).format(value);
+    }
+
+    function formatBytes(value) {
+      if (value === null || value === undefined) {
+        return "n/d";
+      }
+
+      if (value < 1024) {
+        return `${integer(value)} B`;
+      }
+
+      const units = ["KB", "MB", "GB", "TB"];
+      let amount = value / 1024;
+      let unitIndex = 0;
+      while (amount >= 1024 && unitIndex < units.length - 1) {
+        amount /= 1024;
+        unitIndex += 1;
+      }
+      return `${new Intl.NumberFormat("it-IT", { maximumFractionDigits: 2 }).format(amount)} ${units[unitIndex]}`;
+    }
+
+    function toDateInputValue(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+  </script>
+</body>
+</html>
