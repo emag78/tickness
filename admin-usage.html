@@ -255,7 +255,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 760px;
+      min-width: 1280px;
       background: var(--surface);
     }
 
@@ -391,6 +391,30 @@
         <div class="kpi-title">CloudWatch logs bytes totali</div>
         <div id="cloudWatchBytes" class="kpi-value">-</div>
       </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Active devices</div>
+        <div id="activeDevices" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Active channels</div>
+        <div id="activeChannels" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Avg API/device</div>
+        <div id="avgApiPerDevice" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Avg API/channel</div>
+        <div id="avgApiPerChannel" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Avg cost/device</div>
+        <div id="avgCostPerDevice" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Avg cost/channel</div>
+        <div id="avgCostPerChannel" class="kpi-value">-</div>
+      </article>
     </section>
 
     <section class="charts" aria-label="Grafici">
@@ -405,6 +429,14 @@
       <article class="panel chart-card">
         <div class="chart-title">Lambda invocations giornaliere</div>
         <div class="chart-box"><canvas id="lambdaChart"></canvas></div>
+      </article>
+      <article class="panel chart-card">
+        <div class="chart-title">Active devices daily</div>
+        <div class="chart-box"><canvas id="activeDevicesChart"></canvas></div>
+      </article>
+      <article class="panel chart-card">
+        <div class="chart-title">Active channels daily</div>
+        <div class="chart-box"><canvas id="activeChannelsChart"></canvas></div>
       </article>
     </section>
 
@@ -423,6 +455,12 @@
               <th>Lambda invocations</th>
               <th>WebSocket connections</th>
               <th>CloudWatch bytes</th>
+              <th>Active devices</th>
+              <th>Active channels</th>
+              <th>API/device</th>
+              <th>API/channel</th>
+              <th>Cost/device</th>
+              <th>Cost/channel</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -449,6 +487,12 @@
       lambdaInvocations: document.getElementById("lambdaInvocations"),
       websocketConnections: document.getElementById("websocketConnections"),
       cloudWatchBytes: document.getElementById("cloudWatchBytes"),
+      activeDevices: document.getElementById("activeDevices"),
+      activeChannels: document.getElementById("activeChannels"),
+      avgApiPerDevice: document.getElementById("avgApiPerDevice"),
+      avgApiPerChannel: document.getElementById("avgApiPerChannel"),
+      avgCostPerDevice: document.getElementById("avgCostPerDevice"),
+      avgCostPerChannel: document.getElementById("avgCostPerChannel"),
       tableBody: document.getElementById("tableBody"),
       emptyState: document.getElementById("emptyState"),
       rowCount: document.getElementById("rowCount")
@@ -553,21 +597,36 @@
         apiRequests: numberValue(item.apiGatewayRequestsTotal),
         lambdaInvocations: numberValue(item.lambdaInvocationsTotal),
         websocketConnections: numberValue(item.websocketConnectionsTotal),
-        cloudWatchBytes: numberValue(item.cloudWatchLogsBytesTotal ?? item.cloudWatchLogsIngestedBytesTotal ?? item.cloudWatchBytesTotal)
+        cloudWatchBytes: numberValue(item.cloudWatchLogsBytesTotal ?? item.cloudWatchLogsIngestedBytesTotal ?? item.cloudWatchBytesTotal),
+        activeDevices: numberValue(item.activeDevicesDaily),
+        activeChannels: numberValue(item.activeChannelsDaily),
+        apiPerDevice: numberValue(item.apiRequestsPerActiveDevice),
+        apiPerChannel: numberValue(item.apiRequestsPerActiveChannel),
+        costPerDevice: numberValue(item.estimatedCostPerActiveDevice),
+        costPerChannel: numberValue(item.estimatedCostPerActiveChannel)
       };
     }
 
     function renderKpis(items) {
       const totalCost = sum(items, "cost");
+      const totalApiRequests = sum(items, "apiRequests");
+      const totalActiveDevices = sumOrNull(items, "activeDevices");
+      const totalActiveChannels = sumOrNull(items, "activeChannels");
       const daysWithCost = items.filter((item) => item.cost !== null).length;
       const averageCost = daysWithCost ? totalCost / daysWithCost : null;
 
       els.totalCost.textContent = money(totalCost);
       els.averageCost.textContent = averageCost === null ? "n/d" : money(averageCost);
-      els.apiRequests.textContent = integer(sum(items, "apiRequests"));
+      els.apiRequests.textContent = integer(totalApiRequests);
       els.lambdaInvocations.textContent = integer(sum(items, "lambdaInvocations"));
       els.websocketConnections.textContent = integer(sum(items, "websocketConnections"));
       els.cloudWatchBytes.textContent = formatBytes(sumOrNull(items, "cloudWatchBytes"));
+      els.activeDevices.textContent = totalActiveDevices === null ? "n/d" : integer(totalActiveDevices);
+      els.activeChannels.textContent = totalActiveChannels === null ? "n/d" : integer(totalActiveChannels);
+      els.avgApiPerDevice.textContent = ratio(totalActiveDevices ? totalApiRequests / totalActiveDevices : null);
+      els.avgApiPerChannel.textContent = ratio(totalActiveChannels ? totalApiRequests / totalActiveChannels : null);
+      els.avgCostPerDevice.textContent = money(totalActiveDevices ? totalCost / totalActiveDevices : null);
+      els.avgCostPerChannel.textContent = money(totalActiveChannels ? totalCost / totalActiveChannels : null);
     }
 
     function renderCharts(items) {
@@ -579,6 +638,8 @@
       upsertChart("costChart", "cost", labels, items.map((item) => item.cost ?? 0), "#1f7fbf");
       upsertChart("apiChart", "api", labels, items.map((item) => item.apiRequests ?? 0), "#0f766e");
       upsertChart("lambdaChart", "lambda", labels, items.map((item) => item.lambdaInvocations ?? 0), "#7c3aed");
+      upsertChart("activeDevicesChart", "activeDevices", labels, items.map((item) => item.activeDevices ?? 0), "#c2410c");
+      upsertChart("activeChannelsChart", "activeChannels", labels, items.map((item) => item.activeChannels ?? 0), "#4f46e5");
     }
 
     function upsertChart(canvasId, key, labels, data, color) {
@@ -642,6 +703,12 @@
           <td>${integer(item.lambdaInvocations)}</td>
           <td>${integer(item.websocketConnections)}</td>
           <td>${formatBytes(item.cloudWatchBytes)}</td>
+          <td>${integer(item.activeDevices)}</td>
+          <td>${integer(item.activeChannels)}</td>
+          <td>${ratio(item.apiPerDevice)}</td>
+          <td>${ratio(item.apiPerChannel)}</td>
+          <td>${money(item.costPerDevice)}</td>
+          <td>${money(item.costPerChannel)}</td>
         `;
         fragment.appendChild(row);
       }
@@ -688,8 +755,16 @@
       return new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-        maximumFractionDigits: 4
+        minimumFractionDigits: value !== 0 && Math.abs(value) < 0.01 ? 6 : 2,
+        maximumFractionDigits: value !== 0 && Math.abs(value) < 0.01 ? 6 : 4
       }).format(value);
+    }
+
+    function ratio(value) {
+      if (value === null || value === undefined) {
+        return "n/d";
+      }
+      return new Intl.NumberFormat("it-IT", { maximumFractionDigits: 2 }).format(value);
     }
 
     function integer(value) {
