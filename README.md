@@ -82,3 +82,8 @@ Tickness was created with a simple idea:
 > help people organize their life without feeling overwhelmed.
 
 The goal is not only productivity, but also clarity, focus and mental breathing space in everyday life.
+
+## 🌐 Links
+
+- Website: https://tickness.com
+- Beta testing guide: https://tickness.com/beta.html
