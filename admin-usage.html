@@ -461,6 +461,11 @@
               <th>API/channel</th>
               <th>Cost/device</th>
               <th>Cost/channel</th>
+              <th>Shared mutations</th>
+              <th>Task mutations</th>
+              <th>Category mutations</th>
+              <th>Shared mutations/channel</th>
+              <th>Shared mutations/device</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -603,7 +608,12 @@
         apiPerDevice: numberValue(item.apiRequestsPerActiveDevice),
         apiPerChannel: numberValue(item.apiRequestsPerActiveChannel),
         costPerDevice: numberValue(item.estimatedCostPerActiveDevice),
-        costPerChannel: numberValue(item.estimatedCostPerActiveChannel)
+        costPerChannel: numberValue(item.estimatedCostPerActiveChannel),
+        sharedMutations: numberValue(item.sharedMutationsTotal),
+        taskMutations: numberValue(item.sharedTaskMutations),
+        categoryMutations: numberValue(item.sharedCategoryMutations),
+        sharedMutationsPerChannel: numberValue(item.avgSharedMutationsPerActiveChannel),
+        sharedMutationsPerDevice: numberValue(item.avgSharedMutationsPerActiveDevice)
       };
     }
 
@@ -709,6 +719,11 @@
           <td>${ratio(item.apiPerChannel)}</td>
           <td>${money(item.costPerDevice)}</td>
           <td>${money(item.costPerChannel)}</td>
+          <td>${integer(item.sharedMutations)}</td>
+          <td>${integer(item.taskMutations)}</td>
+          <td>${integer(item.categoryMutations)}</td>
+          <td>${ratio(item.sharedMutationsPerChannel)}</td>
+          <td>${ratio(item.sharedMutationsPerDevice)}</td>
         `;
         fragment.appendChild(row);
       }
