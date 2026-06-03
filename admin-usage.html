@@ -96,7 +96,7 @@
 
     .controls {
       display: grid;
-      grid-template-columns: minmax(220px, 1.4fr) repeat(2, minmax(150px, 0.75fr)) auto auto;
+      grid-template-columns: minmax(140px, 0.7fr) minmax(170px, 0.85fr) repeat(2, minmax(150px, 0.75fr)) auto auto;
       gap: 12px;
       padding: 16px;
       align-items: end;
@@ -111,7 +111,8 @@
       text-transform: uppercase;
     }
 
-    input {
+    input,
+    select {
       width: 100%;
       min-height: 42px;
       border: 1px solid var(--line);
@@ -123,7 +124,8 @@
       outline: none;
     }
 
-    input:focus {
+    input:focus,
+    select:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(31, 127, 191, 0.14);
     }
@@ -350,6 +352,14 @@
         <input id="token" type="password" autocomplete="current-password" placeholder="x-admin-token">
       </label>
       <label>
+        Period
+        <select id="period">
+          <option value="currentMonth" selected>Current month</option>
+          <option value="previousMonth">Previous month</option>
+          <option value="last30Days">Last 30 days</option>
+        </select>
+      </label>
+      <label>
         From
         <input id="fromDate" type="date">
       </label>
@@ -481,6 +491,7 @@
 
     const els = {
       token: document.getElementById("token"),
+      period: document.getElementById("period"),
       saveToken: document.getElementById("saveToken"),
       fromDate: document.getElementById("fromDate"),
       toDate: document.getElementById("toDate"),
@@ -506,19 +517,30 @@
     const charts = {};
 
     document.addEventListener("DOMContentLoaded", () => {
-      setDefaultDates();
+      applyPeriodSelection();
       restoreToken();
       els.refresh.addEventListener("click", loadStats);
+      els.period.addEventListener("change", applyPeriodSelection);
       els.saveToken.addEventListener("change", persistTokenPreference);
       els.token.addEventListener("input", persistTokenPreference);
     });
 
-    function setDefaultDates() {
-      const to = new Date();
-      const from = new Date(to);
-      from.setDate(to.getDate() - 29);
-      els.fromDate.value = toDateInputValue(from);
-      els.toDate.value = toDateInputValue(to);
+    function applyPeriodSelection() {
+      const today = new Date();
+      let from = new Date(today);
+      let to = new Date(today);
+
+      if (els.period.value === "previousMonth") {
+        from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        to = new Date(today.getFullYear(), today.getMonth(), 0);
+      } else if (els.period.value === "last30Days") {
+        from.setDate(today.getDate() - 29);
+      } else {
+        from = new Date(today.getFullYear(), today.getMonth(), 1);
+      }
+
+      els.fromDate.value = formatLocalDate(from);
+      els.toDate.value = formatLocalDate(to);
     }
 
     function restoreToken() {
@@ -808,7 +830,7 @@
       return `${new Intl.NumberFormat("it-IT", { maximumFractionDigits: 2 }).format(amount)} ${units[unitIndex]}`;
     }
 
-    function toDateInputValue(date) {
+    function formatLocalDate(date) {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
