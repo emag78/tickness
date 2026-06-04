@@ -184,6 +184,13 @@
       font-weight: 700;
     }
 
+    .consolidation {
+      margin: -6px 0 16px;
+      min-height: 18px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
     .kpis {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -375,31 +382,32 @@
     </section>
 
     <div id="status" class="status" role="status" aria-live="polite"></div>
+    <div id="consolidation" class="consolidation" aria-live="polite">No consolidated data available for selected range</div>
 
     <section class="kpis" aria-label="KPI">
       <article class="panel kpi">
-        <div class="kpi-title">Costo totale range</div>
+        <div class="kpi-title">Total cost range</div>
         <div id="totalCost" class="kpi-value">-</div>
       </article>
       <article class="panel kpi">
-        <div class="kpi-title">Costo medio giornaliero</div>
+        <div class="kpi-title">Avg daily cost</div>
         <div id="averageCost" class="kpi-value">-</div>
       </article>
       <article class="panel kpi">
-        <div class="kpi-title">API requests totali</div>
+        <div class="kpi-title">API requests total</div>
         <div id="apiRequests" class="kpi-value">-</div>
       </article>
       <article class="panel kpi">
-        <div class="kpi-title">Lambda invocations totali</div>
+        <div class="kpi-title">Lambda invocations total</div>
         <div id="lambdaInvocations" class="kpi-value">-</div>
       </article>
       <article class="panel kpi">
-        <div class="kpi-title">WebSocket connections totali</div>
+        <div class="kpi-title">WebSocket connections total</div>
         <div id="websocketConnections" class="kpi-value">-</div>
       </article>
       <article class="panel kpi">
-        <div class="kpi-title">CloudWatch logs bytes totali</div>
-        <div id="cloudWatchBytes" class="kpi-value">-</div>
+        <div class="kpi-title">Shared mutations</div>
+        <div id="sharedMutations" class="kpi-value">-</div>
       </article>
       <article class="panel kpi">
         <div class="kpi-title">Active devices</div>
@@ -425,19 +433,39 @@
         <div class="kpi-title">Avg cost/channel</div>
         <div id="avgCostPerChannel" class="kpi-value">-</div>
       </article>
+      <article class="panel kpi">
+        <div class="kpi-title">CloudWatch logs bytes total</div>
+        <div id="cloudWatchBytes" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Task mutations</div>
+        <div id="taskMutations" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Category mutations</div>
+        <div id="categoryMutations" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Avg mutations/device</div>
+        <div id="avgMutationsPerDevice" class="kpi-value">-</div>
+      </article>
+      <article class="panel kpi">
+        <div class="kpi-title">Avg mutations/channel</div>
+        <div id="avgMutationsPerChannel" class="kpi-value">-</div>
+      </article>
     </section>
 
     <section class="charts" aria-label="Grafici">
       <article class="panel chart-card">
-        <div class="chart-title">Costo giornaliero</div>
+        <div class="chart-title">Daily cost</div>
         <div class="chart-box"><canvas id="costChart"></canvas></div>
       </article>
       <article class="panel chart-card">
-        <div class="chart-title">API requests giornaliere</div>
+        <div class="chart-title">API requests daily</div>
         <div class="chart-box"><canvas id="apiChart"></canvas></div>
       </article>
       <article class="panel chart-card">
-        <div class="chart-title">Lambda invocations giornaliere</div>
+        <div class="chart-title">Lambda invocations daily</div>
         <div class="chart-box"><canvas id="lambdaChart"></canvas></div>
       </article>
       <article class="panel chart-card">
@@ -447,6 +475,10 @@
       <article class="panel chart-card">
         <div class="chart-title">Active channels daily</div>
         <div class="chart-box"><canvas id="activeChannelsChart"></canvas></div>
+      </article>
+      <article class="panel chart-card">
+        <div class="chart-title">Shared mutations daily</div>
+        <div class="chart-box"><canvas id="sharedMutationsChart"></canvas></div>
       </article>
     </section>
 
@@ -509,6 +541,12 @@
       avgApiPerChannel: document.getElementById("avgApiPerChannel"),
       avgCostPerDevice: document.getElementById("avgCostPerDevice"),
       avgCostPerChannel: document.getElementById("avgCostPerChannel"),
+      consolidation: document.getElementById("consolidation"),
+      sharedMutations: document.getElementById("sharedMutations"),
+      taskMutations: document.getElementById("taskMutations"),
+      categoryMutations: document.getElementById("categoryMutations"),
+      avgMutationsPerDevice: document.getElementById("avgMutationsPerDevice"),
+      avgMutationsPerChannel: document.getElementById("avgMutationsPerChannel"),
       tableBody: document.getElementById("tableBody"),
       emptyState: document.getElementById("emptyState"),
       rowCount: document.getElementById("rowCount")
@@ -612,6 +650,7 @@
 
     function render(items) {
       const normalized = items.map(normalizeItem).sort((a, b) => a.date.localeCompare(b.date));
+      renderConsolidation(normalized);
       renderKpis(normalized);
       renderCharts(normalized);
       renderTable(normalized);
@@ -640,25 +679,35 @@
     }
 
     function renderKpis(items) {
-      const totalCost = sum(items, "cost");
-      const totalApiRequests = sum(items, "apiRequests");
+      const totalCost = sumOrNull(items, "cost");
+      const totalApiRequests = sumOrNull(items, "apiRequests");
       const totalActiveDevices = sumOrNull(items, "activeDevices");
       const totalActiveChannels = sumOrNull(items, "activeChannels");
+      const totalSharedMutations = sumOrNull(items, "sharedMutations");
+      const totalTaskMutations = sumOrNull(items, "taskMutations");
+      const totalCategoryMutations = sumOrNull(items, "categoryMutations");
       const daysWithCost = items.filter((item) => item.cost !== null).length;
       const averageCost = daysWithCost ? totalCost / daysWithCost : null;
+      const avgMutationsPerDevice = averageAvailable(items, "sharedMutationsPerDevice");
+      const avgMutationsPerChannel = averageAvailable(items, "sharedMutationsPerChannel");
 
       els.totalCost.textContent = money(totalCost);
       els.averageCost.textContent = averageCost === null ? "n/d" : money(averageCost);
       els.apiRequests.textContent = integer(totalApiRequests);
-      els.lambdaInvocations.textContent = integer(sum(items, "lambdaInvocations"));
-      els.websocketConnections.textContent = integer(sum(items, "websocketConnections"));
+      els.lambdaInvocations.textContent = integer(sumOrNull(items, "lambdaInvocations"));
+      els.websocketConnections.textContent = integer(sumOrNull(items, "websocketConnections"));
       els.cloudWatchBytes.textContent = formatBytes(sumOrNull(items, "cloudWatchBytes"));
       els.activeDevices.textContent = totalActiveDevices === null ? "n/d" : integer(totalActiveDevices);
       els.activeChannels.textContent = totalActiveChannels === null ? "n/d" : integer(totalActiveChannels);
-      els.avgApiPerDevice.textContent = ratio(totalActiveDevices ? totalApiRequests / totalActiveDevices : null);
-      els.avgApiPerChannel.textContent = ratio(totalActiveChannels ? totalApiRequests / totalActiveChannels : null);
-      els.avgCostPerDevice.textContent = money(totalActiveDevices ? totalCost / totalActiveDevices : null);
-      els.avgCostPerChannel.textContent = money(totalActiveChannels ? totalCost / totalActiveChannels : null);
+      els.avgApiPerDevice.textContent = ratio(totalActiveDevices && totalApiRequests !== null ? totalApiRequests / totalActiveDevices : null);
+      els.avgApiPerChannel.textContent = ratio(totalActiveChannels && totalApiRequests !== null ? totalApiRequests / totalActiveChannels : null);
+      els.avgCostPerDevice.textContent = money(totalActiveDevices && totalCost !== null ? totalCost / totalActiveDevices : null);
+      els.avgCostPerChannel.textContent = money(totalActiveChannels && totalCost !== null ? totalCost / totalActiveChannels : null);
+      els.sharedMutations.textContent = integer(totalSharedMutations);
+      els.taskMutations.textContent = integer(totalTaskMutations);
+      els.categoryMutations.textContent = integer(totalCategoryMutations);
+      els.avgMutationsPerDevice.textContent = ratio(avgMutationsPerDevice);
+      els.avgMutationsPerChannel.textContent = ratio(avgMutationsPerChannel);
     }
 
     function renderCharts(items) {
@@ -667,14 +716,22 @@
       }
 
       const labels = items.map((item) => item.date);
-      upsertChart("costChart", "cost", labels, items.map((item) => item.cost ?? 0), "#1f7fbf");
+      const costData = items.map((item) => item.cost ?? 0);
+      upsertChart("costChart", "cost", labels, costData, "#1f7fbf", {
+        max: costAxisMax(costData),
+        valueFormatter: money
+      });
       upsertChart("apiChart", "api", labels, items.map((item) => item.apiRequests ?? 0), "#0f766e");
       upsertChart("lambdaChart", "lambda", labels, items.map((item) => item.lambdaInvocations ?? 0), "#7c3aed");
       upsertChart("activeDevicesChart", "activeDevices", labels, items.map((item) => item.activeDevices ?? 0), "#c2410c");
       upsertChart("activeChannelsChart", "activeChannels", labels, items.map((item) => item.activeChannels ?? 0), "#4f46e5");
+      upsertChart("sharedMutationsChart", "sharedMutations", labels, items.map((item) => item.sharedMutations ?? 0), "#be123c", {
+        rawValues: items.map((item) => item.sharedMutations),
+        valueFormatter: integer
+      });
     }
 
-    function upsertChart(canvasId, key, labels, data, color) {
+    function upsertChart(canvasId, key, labels, data, color, chartOptions = {}) {
       const config = {
         type: "line",
         data: {
@@ -695,7 +752,17 @@
           responsive: true,
           plugins: {
             legend: { display: false },
-            tooltip: { mode: "index", intersect: false }
+            tooltip: {
+              mode: "index",
+              intersect: false,
+              callbacks: {
+                label(context) {
+                  const rawValue = chartOptions.rawValues ? chartOptions.rawValues[context.dataIndex] : context.parsed.y;
+                  const formatter = chartOptions.valueFormatter || ratio;
+                  return formatter(rawValue);
+                }
+              }
+            }
           },
           scales: {
             x: {
@@ -704,7 +771,13 @@
             },
             y: {
               beginAtZero: true,
-              ticks: { precision: 0 }
+              max: chartOptions.max,
+              ticks: {
+                precision: 0,
+                callback(value) {
+                  return chartOptions.valueFormatter ? chartOptions.valueFormatter(value) : value;
+                }
+              }
             }
           }
         }
@@ -713,11 +786,20 @@
       if (charts[key]) {
         charts[key].data.labels = labels;
         charts[key].data.datasets[0].data = data;
+        charts[key].options.scales.y.max = chartOptions.max;
+        charts[key].options.plugins.tooltip.callbacks.label = config.options.plugins.tooltip.callbacks.label;
         charts[key].update();
         return;
       }
 
       charts[key] = new Chart(document.getElementById(canvasId), config);
+    }
+
+    function renderConsolidation(items) {
+      const dates = items.map((item) => item.date).filter(Boolean);
+      els.consolidation.textContent = dates.length
+        ? `Data consolidated until: ${dates[dates.length - 1]}`
+        : "No consolidated data available for selected range";
     }
 
     function renderTable(items) {
@@ -769,16 +851,25 @@
       return err.message || "Errore API.";
     }
 
-    function sum(items, key) {
-      return items.reduce((total, item) => total + (item[key] ?? 0), 0);
-    }
-
     function sumOrNull(items, key) {
       const values = items.map((item) => item[key]).filter((value) => value !== null);
       if (!values.length) {
         return null;
       }
       return values.reduce((total, value) => total + value, 0);
+    }
+
+    function averageAvailable(items, key) {
+      const values = items.map((item) => item[key]).filter((value) => value !== null);
+      if (!values.length) {
+        return null;
+      }
+      return values.reduce((total, value) => total + value, 0) / values.length;
+    }
+
+    function costAxisMax(values) {
+      const maxValue = Math.max(0, ...values.filter((value) => Number.isFinite(value)));
+      return maxValue > 0.000001 ? maxValue * 1.2 : 0.01;
     }
 
     function numberValue(value) {
