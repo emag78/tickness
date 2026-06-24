@@ -465,7 +465,7 @@
 
     <section id="costsPanel" class="tab-panel" aria-label="Costi AWS" hidden>
       <div id="costRefreshNote" class="section-note" aria-live="polite">
-        Cost data is refreshed weekly. Values are based on the latest available Cost Explorer snapshot for the selected range.
+        Cost data is refreshed weekly on Monday. Values are based on Cost Explorer snapshots covering complete Monday-Sunday weeks.
       </div>
 
       <section class="panel refresh-card" aria-label="Cost refresh status">
@@ -479,7 +479,7 @@
         </div>
         <div>
           <div class="kpi-title">Refresh frequency</div>
-          <div id="costRefreshFrequency" class="kpi-value">Weekly</div>
+          <div id="costRefreshFrequency" class="kpi-value">Weekly on Monday</div>
         </div>
       </section>
 
@@ -527,7 +527,7 @@
   <script>
     const API_URL = "https://icudn4ttcj.execute-api.eu-central-1.amazonaws.com/admin/usage-stats";
     const TOKEN_STORAGE_KEY = "ticknessAdminUsageToken";
-    const DEFAULT_COST_NOTE = "Cost data is refreshed weekly. Values are based on the latest available Cost Explorer snapshot for the selected range.";
+    const DEFAULT_COST_NOTE = "Cost data is refreshed weekly on Monday. Values are based on Cost Explorer snapshots covering complete Monday-Sunday weeks.";
 
     const els = {
       token: document.getElementById("token"),
@@ -677,7 +677,7 @@
           note: payload.costRefreshNote || DEFAULT_COST_NOTE,
           lastCostRefreshAt: payload.lastCostRefreshAt || null,
           nextCostRefreshAt: payload.nextCostRefreshAt || null,
-          costRefreshFrequency: payload.costRefreshFrequency || "Weekly"
+          costRefreshFrequency: payload.costRefreshFrequency || "Weekly on Monday"
         });
         showStatus(
           usageItems.length || costSnapshots.length
@@ -690,7 +690,7 @@
           note: DEFAULT_COST_NOTE,
           lastCostRefreshAt: null,
           nextCostRefreshAt: null,
-          costRefreshFrequency: "Weekly"
+          costRefreshFrequency: "Weekly on Monday"
         });
         showStatus(normalizeError(err), "error");
       } finally {
@@ -863,7 +863,7 @@
         return !current || item.collectedAt > current ? item.collectedAt : current;
       }, null);
       const lastRefreshAt = refresh.lastCostRefreshAt || fallbackLastRefresh;
-      const frequency = refresh.costRefreshFrequency || "Weekly";
+      const frequency = refresh.costRefreshFrequency || "Weekly on Monday";
 
       els.costLastRefreshAt.textContent = lastRefreshAt ? formatDateTime(lastRefreshAt) : "No cost snapshot available yet";
       els.costNextRefreshAt.textContent = refresh.nextCostRefreshAt
