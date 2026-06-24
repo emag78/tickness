@@ -22,9 +22,7 @@
       --shadow: 0 10px 28px rgba(31, 63, 91, 0.08);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -83,9 +81,7 @@
       margin-top: 2px;
     }
 
-    main {
-      padding: 24px 0 40px;
-    }
+    main { padding: 24px 0 40px; }
 
     .panel {
       background: var(--surface);
@@ -158,9 +154,7 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background: var(--accent-dark);
-    }
+    button:hover { background: var(--accent-dark); }
 
     button:disabled {
       cursor: progress;
@@ -184,11 +178,48 @@
       font-weight: 700;
     }
 
-    .consolidation {
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 0 0 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab-button {
+      min-height: 40px;
+      border-radius: 8px 8px 0 0;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-bottom: 0;
+    }
+
+    .tab-button:hover,
+    .tab-button.active {
+      background: var(--surface);
+      color: var(--accent-dark);
+      border-color: var(--line);
+    }
+
+    .tab-panel[hidden] { display: none; }
+
+    .section-note {
       margin: -6px 0 16px;
       min-height: 18px;
       color: var(--muted);
       font-size: 0.84rem;
+    }
+
+    .refresh-card {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .refresh-card div {
+      min-width: 0;
     }
 
     .kpis {
@@ -198,9 +229,7 @@
       margin-bottom: 16px;
     }
 
-    .kpi {
-      padding: 14px;
-    }
+    .kpi { padding: 14px; }
 
     .kpi-title {
       color: var(--muted);
@@ -235,13 +264,9 @@
       margin-bottom: 12px;
     }
 
-    .chart-box {
-      height: 240px;
-    }
+    .chart-box { height: 240px; }
 
-    .table-card {
-      overflow: hidden;
-    }
+    .table-card { overflow: hidden; }
 
     .table-head {
       display: flex;
@@ -257,14 +282,12 @@
       margin: 0;
     }
 
-    .table-wrap {
-      overflow-x: auto;
-    }
+    .table-wrap { overflow-x: auto; }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1280px;
+      min-width: 1180px;
       background: var(--surface);
     }
 
@@ -277,9 +300,7 @@
     }
 
     th:first-child,
-    td:first-child {
-      text-align: left;
-    }
+    td:first-child { text-align: left; }
 
     th {
       color: var(--muted);
@@ -288,9 +309,7 @@
       text-transform: uppercase;
     }
 
-    tbody tr:last-child td {
-      border-bottom: 0;
-    }
+    tbody tr:last-child td { border-bottom: 0; }
 
     .empty {
       padding: 28px 16px;
@@ -299,23 +318,14 @@
     }
 
     @media (max-width: 980px) {
-      .controls {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .kpis {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .charts {
-        grid-template-columns: 1fr;
-      }
+      .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .refresh-card { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .charts { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
-      .wrap {
-        width: min(100% - 20px, 1180px);
-      }
+      .wrap { width: min(100% - 20px, 1180px); }
 
       .topbar {
         align-items: flex-start;
@@ -325,17 +335,11 @@
       }
 
       .controls,
-      .kpis {
-        grid-template-columns: 1fr;
-      }
+      .kpis { grid-template-columns: 1fr; }
 
-      .kpi-title {
-        min-height: 0;
-      }
-
-      .save-token {
-        justify-content: flex-start;
-      }
+      .tabs { overflow-x: auto; }
+      .kpi-title { min-height: 0; }
+      .save-token { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -346,7 +350,7 @@
         <img src="tick.png" alt="Tickness">
         <div>
           <h1>Tickness Admin Usage</h1>
-          <div class="subtitle">AWS daily usage</div>
+          <div class="subtitle">Operativita giornaliera e costi AWS separati</div>
         </div>
       </div>
     </div>
@@ -382,144 +386,148 @@
     </section>
 
     <div id="status" class="status" role="status" aria-live="polite"></div>
-    <div id="consolidation" class="consolidation" aria-live="polite">No consolidated data available for selected range</div>
 
-    <section class="kpis" aria-label="KPI">
-      <article class="panel kpi">
-        <div class="kpi-title">Total cost range</div>
-        <div id="totalCost" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Avg daily cost</div>
-        <div id="averageCost" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">API requests total</div>
-        <div id="apiRequests" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Lambda invocations total</div>
-        <div id="lambdaInvocations" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">WebSocket connections total</div>
-        <div id="websocketConnections" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Shared mutations</div>
-        <div id="sharedMutations" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Active devices</div>
-        <div id="activeDevices" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Active channels</div>
-        <div id="activeChannels" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Avg API/device</div>
-        <div id="avgApiPerDevice" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Avg API/channel</div>
-        <div id="avgApiPerChannel" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Avg cost/device</div>
-        <div id="avgCostPerDevice" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Avg cost/channel</div>
-        <div id="avgCostPerChannel" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">CloudWatch logs bytes total</div>
-        <div id="cloudWatchBytes" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Task mutations</div>
-        <div id="taskMutations" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Category mutations</div>
-        <div id="categoryMutations" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Avg mutations/device</div>
-        <div id="avgMutationsPerDevice" class="kpi-value">-</div>
-      </article>
-      <article class="panel kpi">
-        <div class="kpi-title">Avg mutations/channel</div>
-        <div id="avgMutationsPerChannel" class="kpi-value">-</div>
-      </article>
+    <nav class="tabs" aria-label="Sezioni admin usage">
+      <button id="usageTab" class="tab-button active" type="button" data-tab="usage">Usage</button>
+      <button id="costsTab" class="tab-button" type="button" data-tab="costs">Costs</button>
+    </nav>
+
+    <section id="usagePanel" class="tab-panel" aria-label="Operativita giornaliera">
+      <div id="usageConsolidation" class="section-note" aria-live="polite">No consolidated usage data available for selected range</div>
+
+      <section class="kpis" aria-label="Usage KPI">
+        <article class="panel kpi"><div class="kpi-title">Active devices</div><div id="activeDevices" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Active channels</div><div id="activeChannels" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">API requests total</div><div id="apiRequests" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Lambda invocations total</div><div id="lambdaInvocations" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Lambda errors</div><div id="lambdaErrors" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">WebSocket connections</div><div id="websocketConnections" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">WebSocket messages</div><div id="websocketMessages" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">WebSocket errors</div><div id="websocketErrors" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">DynamoDB reads</div><div id="dynamoReads" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">DynamoDB writes</div><div id="dynamoWrites" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Shared mutations</div><div id="sharedMutations" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">CloudWatch logs bytes</div><div id="cloudWatchBytes" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Task mutations</div><div id="taskMutations" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Category mutations</div><div id="categoryMutations" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Avg API/device</div><div id="avgApiPerDevice" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Avg API/channel</div><div id="avgApiPerChannel" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Avg mutations/device</div><div id="avgMutationsPerDevice" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Avg mutations/channel</div><div id="avgMutationsPerChannel" class="kpi-value">-</div></article>
+      </section>
+
+      <section class="charts" aria-label="Usage charts">
+        <article class="panel chart-card"><div class="chart-title">Daily active devices</div><div class="chart-box"><canvas id="activeDevicesChart"></canvas></div></article>
+        <article class="panel chart-card"><div class="chart-title">Daily active channels</div><div class="chart-box"><canvas id="activeChannelsChart"></canvas></div></article>
+        <article class="panel chart-card"><div class="chart-title">Daily API requests</div><div class="chart-box"><canvas id="apiChart"></canvas></div></article>
+        <article class="panel chart-card"><div class="chart-title">Daily WebSocket activity</div><div class="chart-box"><canvas id="websocketChart"></canvas></div></article>
+        <article class="panel chart-card"><div class="chart-title">Daily Lambda invocations/errors</div><div class="chart-box"><canvas id="lambdaChart"></canvas></div></article>
+        <article class="panel chart-card"><div class="chart-title">Daily DynamoDB read/write</div><div class="chart-box"><canvas id="dynamoChart"></canvas></div></article>
+        <article class="panel chart-card"><div class="chart-title">Daily shared mutations</div><div class="chart-box"><canvas id="sharedMutationsChart"></canvas></div></article>
+      </section>
+
+      <section class="panel table-card" aria-label="Tabella giornaliera">
+        <div class="table-head">
+          <h2>Dettaglio giornaliero usage</h2>
+          <span id="usageRowCount" class="subtitle">0 giorni</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>API requests</th>
+                <th>Lambda invocations</th>
+                <th>Lambda errors</th>
+                <th>WebSocket connections</th>
+                <th>WebSocket messages</th>
+                <th>WebSocket errors</th>
+                <th>DynamoDB reads</th>
+                <th>DynamoDB writes</th>
+                <th>CloudWatch bytes</th>
+                <th>Active devices</th>
+                <th>Active channels</th>
+                <th>API/device</th>
+                <th>API/channel</th>
+                <th>Shared mutations</th>
+                <th>Task mutations</th>
+                <th>Category mutations</th>
+                <th>Shared mutations/channel</th>
+                <th>Shared mutations/device</th>
+              </tr>
+            </thead>
+            <tbody id="usageTableBody"></tbody>
+          </table>
+        </div>
+        <div id="usageEmptyState" class="empty" hidden>Nessun dato operativo nel range selezionato.</div>
+      </section>
     </section>
 
-    <section class="charts" aria-label="Grafici">
-      <article class="panel chart-card">
-        <div class="chart-title">Daily cost</div>
-        <div class="chart-box"><canvas id="costChart"></canvas></div>
-      </article>
-      <article class="panel chart-card">
-        <div class="chart-title">API requests daily</div>
-        <div class="chart-box"><canvas id="apiChart"></canvas></div>
-      </article>
-      <article class="panel chart-card">
-        <div class="chart-title">Lambda invocations daily</div>
-        <div class="chart-box"><canvas id="lambdaChart"></canvas></div>
-      </article>
-      <article class="panel chart-card">
-        <div class="chart-title">Active devices daily</div>
-        <div class="chart-box"><canvas id="activeDevicesChart"></canvas></div>
-      </article>
-      <article class="panel chart-card">
-        <div class="chart-title">Active channels daily</div>
-        <div class="chart-box"><canvas id="activeChannelsChart"></canvas></div>
-      </article>
-      <article class="panel chart-card">
-        <div class="chart-title">Shared mutations daily</div>
-        <div class="chart-box"><canvas id="sharedMutationsChart"></canvas></div>
-      </article>
-    </section>
+    <section id="costsPanel" class="tab-panel" aria-label="Costi AWS" hidden>
+      <div id="costRefreshNote" class="section-note" aria-live="polite">
+        Cost data is refreshed weekly. Values are based on the latest available Cost Explorer snapshot for the selected range.
+      </div>
 
-    <section class="panel table-card" aria-label="Tabella giornaliera">
-      <div class="table-head">
-        <h2>Dettaglio giornaliero</h2>
-        <span id="rowCount" class="subtitle">0 giorni</span>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Costo totale</th>
-              <th>API requests</th>
-              <th>Lambda invocations</th>
-              <th>WebSocket connections</th>
-              <th>CloudWatch bytes</th>
-              <th>Active devices</th>
-              <th>Active channels</th>
-              <th>API/device</th>
-              <th>API/channel</th>
-              <th>Cost/device</th>
-              <th>Cost/channel</th>
-              <th>Shared mutations</th>
-              <th>Task mutations</th>
-              <th>Category mutations</th>
-              <th>Shared mutations/channel</th>
-              <th>Shared mutations/device</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-      <div id="emptyState" class="empty" hidden>Nessun dato nel range selezionato.</div>
+      <section class="panel refresh-card" aria-label="Cost refresh status">
+        <div>
+          <div class="kpi-title">Last Cost Refresh</div>
+          <div id="costLastRefreshAt" class="kpi-value">-</div>
+        </div>
+        <div>
+          <div class="kpi-title">Next Scheduled Refresh</div>
+          <div id="costNextRefreshAt" class="kpi-value">-</div>
+        </div>
+        <div>
+          <div class="kpi-title">Refresh frequency</div>
+          <div id="costRefreshFrequency" class="kpi-value">Weekly</div>
+        </div>
+      </section>
+
+      <section class="kpis" aria-label="Cost KPI">
+        <article class="panel kpi"><div class="kpi-title">AWS cost range</div><div id="awsCostRange" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Avg daily cost</div><div id="awsAverageDailyCost" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Cost/device</div><div id="awsCostPerDevice" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Cost/channel</div><div id="awsCostPerChannel" class="kpi-value">-</div></article>
+        <article class="panel kpi"><div class="kpi-title">Cost period covered</div><div id="awsPeriodCovered" class="kpi-value">-</div></article>
+      </section>
+
+      <section class="charts" aria-label="Cost charts">
+        <article class="panel chart-card"><div class="chart-title">AWS cost by snapshot</div><div class="chart-box"><canvas id="awsCostChart"></canvas></div></article>
+        <article class="panel chart-card"><div class="chart-title">AWS cost by service</div><div class="chart-box"><canvas id="awsServiceChart"></canvas></div></article>
+      </section>
+
+      <section class="panel table-card" aria-label="Tabella costi AWS">
+        <div class="table-head">
+          <h2>Snapshot Cost Explorer</h2>
+          <span id="costRowCount" class="subtitle">0 snapshot</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Snapshot</th>
+                <th>Range coperto</th>
+                <th>Total AWS cost</th>
+                <th>Avg daily cost</th>
+                <th>Cost/device</th>
+                <th>Cost/channel</th>
+                <th>Last refresh</th>
+                <th>Fonte</th>
+                <th>Service breakdown</th>
+              </tr>
+            </thead>
+            <tbody id="costTableBody"></tbody>
+          </table>
+        </div>
+        <div id="costEmptyState" class="empty" hidden>Nessuno snapshot Cost Explorer disponibile per il range selezionato.</div>
+      </section>
     </section>
   </main>
 
   <script>
     const API_URL = "https://icudn4ttcj.execute-api.eu-central-1.amazonaws.com/admin/usage-stats";
     const TOKEN_STORAGE_KEY = "ticknessAdminUsageToken";
+    const DEFAULT_COST_NOTE = "Cost data is refreshed weekly. Values are based on the latest available Cost Explorer snapshot for the selected range.";
 
     const els = {
       token: document.getElementById("token"),
@@ -529,27 +537,44 @@
       toDate: document.getElementById("toDate"),
       refresh: document.getElementById("refresh"),
       status: document.getElementById("status"),
-      totalCost: document.getElementById("totalCost"),
-      averageCost: document.getElementById("averageCost"),
-      apiRequests: document.getElementById("apiRequests"),
-      lambdaInvocations: document.getElementById("lambdaInvocations"),
-      websocketConnections: document.getElementById("websocketConnections"),
-      cloudWatchBytes: document.getElementById("cloudWatchBytes"),
+      usageTab: document.getElementById("usageTab"),
+      costsTab: document.getElementById("costsTab"),
+      usagePanel: document.getElementById("usagePanel"),
+      costsPanel: document.getElementById("costsPanel"),
+      usageConsolidation: document.getElementById("usageConsolidation"),
       activeDevices: document.getElementById("activeDevices"),
       activeChannels: document.getElementById("activeChannels"),
-      avgApiPerDevice: document.getElementById("avgApiPerDevice"),
-      avgApiPerChannel: document.getElementById("avgApiPerChannel"),
-      avgCostPerDevice: document.getElementById("avgCostPerDevice"),
-      avgCostPerChannel: document.getElementById("avgCostPerChannel"),
-      consolidation: document.getElementById("consolidation"),
+      apiRequests: document.getElementById("apiRequests"),
+      lambdaInvocations: document.getElementById("lambdaInvocations"),
+      lambdaErrors: document.getElementById("lambdaErrors"),
+      websocketConnections: document.getElementById("websocketConnections"),
+      websocketMessages: document.getElementById("websocketMessages"),
+      websocketErrors: document.getElementById("websocketErrors"),
+      dynamoReads: document.getElementById("dynamoReads"),
+      dynamoWrites: document.getElementById("dynamoWrites"),
+      cloudWatchBytes: document.getElementById("cloudWatchBytes"),
       sharedMutations: document.getElementById("sharedMutations"),
       taskMutations: document.getElementById("taskMutations"),
       categoryMutations: document.getElementById("categoryMutations"),
+      avgApiPerDevice: document.getElementById("avgApiPerDevice"),
+      avgApiPerChannel: document.getElementById("avgApiPerChannel"),
       avgMutationsPerDevice: document.getElementById("avgMutationsPerDevice"),
       avgMutationsPerChannel: document.getElementById("avgMutationsPerChannel"),
-      tableBody: document.getElementById("tableBody"),
-      emptyState: document.getElementById("emptyState"),
-      rowCount: document.getElementById("rowCount")
+      usageTableBody: document.getElementById("usageTableBody"),
+      usageEmptyState: document.getElementById("usageEmptyState"),
+      usageRowCount: document.getElementById("usageRowCount"),
+      costRefreshNote: document.getElementById("costRefreshNote"),
+      costLastRefreshAt: document.getElementById("costLastRefreshAt"),
+      costNextRefreshAt: document.getElementById("costNextRefreshAt"),
+      costRefreshFrequency: document.getElementById("costRefreshFrequency"),
+      awsCostRange: document.getElementById("awsCostRange"),
+      awsAverageDailyCost: document.getElementById("awsAverageDailyCost"),
+      awsCostPerDevice: document.getElementById("awsCostPerDevice"),
+      awsCostPerChannel: document.getElementById("awsCostPerChannel"),
+      awsPeriodCovered: document.getElementById("awsPeriodCovered"),
+      costTableBody: document.getElementById("costTableBody"),
+      costEmptyState: document.getElementById("costEmptyState"),
+      costRowCount: document.getElementById("costRowCount")
     };
 
     const charts = {};
@@ -561,7 +586,18 @@
       els.period.addEventListener("change", applyPeriodSelection);
       els.saveToken.addEventListener("change", persistTokenPreference);
       els.token.addEventListener("input", persistTokenPreference);
+      els.usageTab.addEventListener("click", () => activateTab("usage"));
+      els.costsTab.addEventListener("click", () => activateTab("costs"));
     });
+
+    function activateTab(tab) {
+      const isUsage = tab === "usage";
+      els.usageTab.classList.toggle("active", isUsage);
+      els.costsTab.classList.toggle("active", !isUsage);
+      els.usagePanel.hidden = !isUsage;
+      els.costsPanel.hidden = isUsage;
+      Object.values(charts).forEach((chart) => chart.resize());
+    }
 
     function applyPeriodSelection() {
       const today = new Date();
@@ -623,9 +659,7 @@
 
         const response = await fetch(url, {
           method: "GET",
-          headers: {
-            "x-admin-token": token
-          }
+          headers: { "x-admin-token": token }
         });
 
         if (response.status === 401) {
@@ -637,39 +671,66 @@
         }
 
         const payload = await response.json();
-        const items = Array.isArray(payload.items) ? payload.items : [];
-        render(items);
-        showStatus(items.length ? `Aggiornato: ${items.length} giorni.` : "Nessun dato nel range selezionato.", items.length ? "ok" : "");
+        const usageItems = Array.isArray(payload.items) ? payload.items : [];
+        const costSnapshots = Array.isArray(payload.costSnapshots) ? payload.costSnapshots : [];
+        render(usageItems, costSnapshots, {
+          note: payload.costRefreshNote || DEFAULT_COST_NOTE,
+          lastCostRefreshAt: payload.lastCostRefreshAt || null,
+          nextCostRefreshAt: payload.nextCostRefreshAt || null,
+          costRefreshFrequency: payload.costRefreshFrequency || "Weekly"
+        });
+        showStatus(
+          usageItems.length || costSnapshots.length
+            ? `Aggiornato: ${usageItems.length} giorni usage, ${costSnapshots.length} snapshot costi.`
+            : "Nessun dato nel range selezionato.",
+          usageItems.length || costSnapshots.length ? "ok" : ""
+        );
       } catch (err) {
-        render([]);
+        render([], [], {
+          note: DEFAULT_COST_NOTE,
+          lastCostRefreshAt: null,
+          nextCostRefreshAt: null,
+          costRefreshFrequency: "Weekly"
+        });
         showStatus(normalizeError(err), "error");
       } finally {
         setLoading(false);
       }
     }
 
-    function render(items) {
-      const normalized = items.map(normalizeItem).sort((a, b) => a.date.localeCompare(b.date));
-      renderConsolidation(normalized);
-      renderKpis(normalized);
-      renderCharts(normalized);
-      renderTable(normalized);
+    function render(items, snapshots, costRefresh) {
+      const usage = items.map(normalizeUsageItem).sort((a, b) => a.date.localeCompare(b.date));
+      const costs = snapshots.map(normalizeCostSnapshot).sort((a, b) => a.periodStart.localeCompare(b.periodStart));
+      renderUsageConsolidation(usage);
+      renderUsageKpis(usage);
+      renderUsageCharts(usage);
+      renderUsageTable(usage);
+      renderCostRefreshStatus(costs, costRefresh);
+      renderCostKpis(costs);
+      renderCostCharts(costs);
+      renderCostTable(costs);
     }
 
-    function normalizeItem(item) {
+    function normalizeUsageItem(item) {
       return {
         date: item.date || "",
-        cost: numberValue(item.estimatedCostUsdDailyTotal),
         apiRequests: numberValue(item.apiGatewayRequestsTotal),
         lambdaInvocations: numberValue(item.lambdaInvocationsTotal),
+        lambdaErrors: numberValue(item.lambdaErrorsTotal),
         websocketConnections: numberValue(item.websocketConnectionsTotal),
+        websocketMessages: numberValue(item.websocketMessagesTotal),
+        websocketErrors: sumValues([
+          item.websocketClientErrors,
+          item.websocketExecutionErrors,
+          item.websocketIntegrationErrors
+        ]),
+        dynamoReads: numberValue(item.dynamoReadUnitsTotal),
+        dynamoWrites: numberValue(item.dynamoWriteUnitsTotal),
         cloudWatchBytes: numberValue(item.cloudWatchLogsBytesTotal ?? item.cloudWatchLogsIngestedBytesTotal ?? item.cloudWatchBytesTotal),
         activeDevices: numberValue(item.activeDevicesDaily),
         activeChannels: numberValue(item.activeChannelsDaily),
         apiPerDevice: numberValue(item.apiRequestsPerActiveDevice),
         apiPerChannel: numberValue(item.apiRequestsPerActiveChannel),
-        costPerDevice: numberValue(item.estimatedCostPerActiveDevice),
-        costPerChannel: numberValue(item.estimatedCostPerActiveChannel),
         sharedMutations: numberValue(item.sharedMutationsTotal),
         taskMutations: numberValue(item.sharedTaskMutations),
         categoryMutations: numberValue(item.sharedCategoryMutations),
@@ -678,151 +739,104 @@
       };
     }
 
-    function renderKpis(items) {
-      const totalCost = sumOrNull(items, "cost");
+    function normalizeCostSnapshot(snapshot) {
+      return {
+        snapshotId: snapshot.snapshotId || snapshot.periodKey || "",
+        granularity: snapshot.granularity || "WEEKLY",
+        periodStart: snapshot.periodStart || "",
+        periodEnd: snapshot.periodEnd || "",
+        collectedAt: snapshot.collectedAt || "",
+        source: snapshot.source || "CostExplorer",
+        totalCost: numberValue(snapshot.totalCost),
+        averageDailyCost: numberValue(snapshot.averageDailyCost),
+        costPerDevice: numberValue(snapshot.costPerDevice),
+        costPerChannel: numberValue(snapshot.costPerChannel),
+        services: snapshot.services && typeof snapshot.services === "object" ? snapshot.services : {}
+      };
+    }
+
+    function renderUsageConsolidation(items) {
+      const dates = items.map((item) => item.date).filter(Boolean);
+      els.usageConsolidation.textContent = dates.length
+        ? `Usage data consolidated until: ${dates[dates.length - 1]}`
+        : "No consolidated usage data available for selected range";
+    }
+
+    function renderUsageKpis(items) {
       const totalApiRequests = sumOrNull(items, "apiRequests");
       const totalActiveDevices = sumOrNull(items, "activeDevices");
       const totalActiveChannels = sumOrNull(items, "activeChannels");
       const totalSharedMutations = sumOrNull(items, "sharedMutations");
-      const totalTaskMutations = sumOrNull(items, "taskMutations");
-      const totalCategoryMutations = sumOrNull(items, "categoryMutations");
-      const daysWithCost = items.filter((item) => item.cost !== null).length;
-      const averageCost = daysWithCost ? totalCost / daysWithCost : null;
       const avgMutationsPerDevice = averageAvailable(items, "sharedMutationsPerDevice");
       const avgMutationsPerChannel = averageAvailable(items, "sharedMutationsPerChannel");
 
-      els.totalCost.textContent = money(totalCost);
-      els.averageCost.textContent = averageCost === null ? "n/d" : money(averageCost);
+      els.activeDevices.textContent = integer(totalActiveDevices);
+      els.activeChannels.textContent = integer(totalActiveChannels);
       els.apiRequests.textContent = integer(totalApiRequests);
       els.lambdaInvocations.textContent = integer(sumOrNull(items, "lambdaInvocations"));
+      els.lambdaErrors.textContent = integer(sumOrNull(items, "lambdaErrors"));
       els.websocketConnections.textContent = integer(sumOrNull(items, "websocketConnections"));
+      els.websocketMessages.textContent = integer(sumOrNull(items, "websocketMessages"));
+      els.websocketErrors.textContent = integer(sumOrNull(items, "websocketErrors"));
+      els.dynamoReads.textContent = integer(sumOrNull(items, "dynamoReads"));
+      els.dynamoWrites.textContent = integer(sumOrNull(items, "dynamoWrites"));
       els.cloudWatchBytes.textContent = formatBytes(sumOrNull(items, "cloudWatchBytes"));
-      els.activeDevices.textContent = totalActiveDevices === null ? "n/d" : integer(totalActiveDevices);
-      els.activeChannels.textContent = totalActiveChannels === null ? "n/d" : integer(totalActiveChannels);
+      els.sharedMutations.textContent = integer(totalSharedMutations);
+      els.taskMutations.textContent = integer(sumOrNull(items, "taskMutations"));
+      els.categoryMutations.textContent = integer(sumOrNull(items, "categoryMutations"));
       els.avgApiPerDevice.textContent = ratio(totalActiveDevices && totalApiRequests !== null ? totalApiRequests / totalActiveDevices : null);
       els.avgApiPerChannel.textContent = ratio(totalActiveChannels && totalApiRequests !== null ? totalApiRequests / totalActiveChannels : null);
-      els.avgCostPerDevice.textContent = money(totalActiveDevices && totalCost !== null ? totalCost / totalActiveDevices : null);
-      els.avgCostPerChannel.textContent = money(totalActiveChannels && totalCost !== null ? totalCost / totalActiveChannels : null);
-      els.sharedMutations.textContent = integer(totalSharedMutations);
-      els.taskMutations.textContent = integer(totalTaskMutations);
-      els.categoryMutations.textContent = integer(totalCategoryMutations);
       els.avgMutationsPerDevice.textContent = ratio(avgMutationsPerDevice);
       els.avgMutationsPerChannel.textContent = ratio(avgMutationsPerChannel);
     }
 
-    function renderCharts(items) {
+    function renderUsageCharts(items) {
       if (typeof Chart === "undefined") {
         return;
       }
 
       const labels = items.map((item) => item.date);
-      const costData = items.map((item) => item.cost ?? 0);
-      upsertChart("costChart", "cost", labels, costData, "#1f7fbf", {
-        max: costAxisMax(costData),
-        valueFormatter: money
-      });
-      upsertChart("apiChart", "api", labels, items.map((item) => item.apiRequests ?? 0), "#0f766e");
-      upsertChart("lambdaChart", "lambda", labels, items.map((item) => item.lambdaInvocations ?? 0), "#7c3aed");
-      upsertChart("activeDevicesChart", "activeDevices", labels, items.map((item) => item.activeDevices ?? 0), "#c2410c");
-      upsertChart("activeChannelsChart", "activeChannels", labels, items.map((item) => item.activeChannels ?? 0), "#4f46e5");
-      upsertChart("sharedMutationsChart", "sharedMutations", labels, items.map((item) => item.sharedMutations ?? 0), "#be123c", {
-        rawValues: items.map((item) => item.sharedMutations),
-        valueFormatter: integer
-      });
+      upsertLineChart("activeDevicesChart", "activeDevices", labels, [{ label: "Active devices", data: items.map((item) => item.activeDevices ?? 0), color: "#c2410c" }]);
+      upsertLineChart("activeChannelsChart", "activeChannels", labels, [{ label: "Active channels", data: items.map((item) => item.activeChannels ?? 0), color: "#4f46e5" }]);
+      upsertLineChart("apiChart", "api", labels, [{ label: "API requests", data: items.map((item) => item.apiRequests ?? 0), color: "#0f766e" }]);
+      upsertLineChart("websocketChart", "websocket", labels, [
+        { label: "Connections", data: items.map((item) => item.websocketConnections ?? 0), color: "#1f7fbf" },
+        { label: "Messages", data: items.map((item) => item.websocketMessages ?? 0), color: "#7c3aed" }
+      ]);
+      upsertLineChart("lambdaChart", "lambda", labels, [
+        { label: "Invocations", data: items.map((item) => item.lambdaInvocations ?? 0), color: "#7c3aed" },
+        { label: "Errors", data: items.map((item) => item.lambdaErrors ?? 0), color: "#b42318" }
+      ]);
+      upsertLineChart("dynamoChart", "dynamo", labels, [
+        { label: "Read units", data: items.map((item) => item.dynamoReads ?? 0), color: "#0f766e" },
+        { label: "Write units", data: items.map((item) => item.dynamoWrites ?? 0), color: "#c2410c" }
+      ]);
+      upsertLineChart("sharedMutationsChart", "sharedMutations", labels, [{ label: "Shared mutations", data: items.map((item) => item.sharedMutations ?? 0), color: "#be123c" }]);
     }
 
-    function upsertChart(canvasId, key, labels, data, color, chartOptions = {}) {
-      const config = {
-        type: "line",
-        data: {
-          labels,
-          datasets: [{
-            data,
-            borderColor: color,
-            backgroundColor: `${color}22`,
-            borderWidth: 2,
-            pointRadius: 2,
-            pointHoverRadius: 4,
-            tension: 0.25,
-            fill: true
-          }]
-        },
-        options: {
-          maintainAspectRatio: false,
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              mode: "index",
-              intersect: false,
-              callbacks: {
-                label(context) {
-                  const rawValue = chartOptions.rawValues ? chartOptions.rawValues[context.dataIndex] : context.parsed.y;
-                  const formatter = chartOptions.valueFormatter || ratio;
-                  return formatter(rawValue);
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { maxTicksLimit: 6 }
-            },
-            y: {
-              beginAtZero: true,
-              max: chartOptions.max,
-              ticks: {
-                precision: 0,
-                callback(value) {
-                  return chartOptions.valueFormatter ? chartOptions.valueFormatter(value) : value;
-                }
-              }
-            }
-          }
-        }
-      };
-
-      if (charts[key]) {
-        charts[key].data.labels = labels;
-        charts[key].data.datasets[0].data = data;
-        charts[key].options.scales.y.max = chartOptions.max;
-        charts[key].options.plugins.tooltip.callbacks.label = config.options.plugins.tooltip.callbacks.label;
-        charts[key].update();
-        return;
-      }
-
-      charts[key] = new Chart(document.getElementById(canvasId), config);
-    }
-
-    function renderConsolidation(items) {
-      const dates = items.map((item) => item.date).filter(Boolean);
-      els.consolidation.textContent = dates.length
-        ? `Data consolidated until: ${dates[dates.length - 1]}`
-        : "No consolidated data available for selected range";
-    }
-
-    function renderTable(items) {
-      els.tableBody.innerHTML = "";
-      els.emptyState.hidden = items.length !== 0;
-      els.rowCount.textContent = `${items.length} ${items.length === 1 ? "giorno" : "giorni"}`;
+    function renderUsageTable(items) {
+      els.usageTableBody.innerHTML = "";
+      els.usageEmptyState.hidden = items.length !== 0;
+      els.usageRowCount.textContent = `${items.length} ${items.length === 1 ? "giorno" : "giorni"}`;
 
       const fragment = document.createDocumentFragment();
       for (const item of items) {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${escapeHtml(item.date)}</td>
-          <td>${money(item.cost)}</td>
           <td>${integer(item.apiRequests)}</td>
           <td>${integer(item.lambdaInvocations)}</td>
+          <td>${integer(item.lambdaErrors)}</td>
           <td>${integer(item.websocketConnections)}</td>
+          <td>${integer(item.websocketMessages)}</td>
+          <td>${integer(item.websocketErrors)}</td>
+          <td>${integer(item.dynamoReads)}</td>
+          <td>${integer(item.dynamoWrites)}</td>
           <td>${formatBytes(item.cloudWatchBytes)}</td>
           <td>${integer(item.activeDevices)}</td>
           <td>${integer(item.activeChannels)}</td>
           <td>${ratio(item.apiPerDevice)}</td>
           <td>${ratio(item.apiPerChannel)}</td>
-          <td>${money(item.costPerDevice)}</td>
-          <td>${money(item.costPerChannel)}</td>
           <td>${integer(item.sharedMutations)}</td>
           <td>${integer(item.taskMutations)}</td>
           <td>${integer(item.categoryMutations)}</td>
@@ -831,7 +845,166 @@
         `;
         fragment.appendChild(row);
       }
-      els.tableBody.appendChild(fragment);
+      els.usageTableBody.appendChild(fragment);
+    }
+
+    function renderCostRefreshStatus(costs, refresh) {
+      const note = refresh.note || DEFAULT_COST_NOTE;
+      const selectedDays = dateDiffDays(els.fromDate.value, addDays(els.toDate.value, 1));
+      const cadenceNote = selectedDays <= 1
+        ? `${note} Il range selezionato e giornaliero, ma i costi sono snapshot settimanali/mensili.`
+        : note;
+      els.costRefreshNote.textContent = costs.length ? cadenceNote : `${cadenceNote} Nessuno snapshot disponibile nel range selezionato.`;
+
+      const fallbackLastRefresh = costs.reduce((current, item) => {
+        if (!item.collectedAt) {
+          return current;
+        }
+        return !current || item.collectedAt > current ? item.collectedAt : current;
+      }, null);
+      const lastRefreshAt = refresh.lastCostRefreshAt || fallbackLastRefresh;
+      const frequency = refresh.costRefreshFrequency || "Weekly";
+
+      els.costLastRefreshAt.textContent = lastRefreshAt ? formatDateTime(lastRefreshAt) : "No cost snapshot available yet";
+      els.costNextRefreshAt.textContent = refresh.nextCostRefreshAt
+        ? formatDate(refresh.nextCostRefreshAt)
+        : lastRefreshAt ? formatDate(addDays(lastRefreshAt.slice(0, 10), 7)) : "n/d";
+      els.costRefreshFrequency.textContent = frequency;
+    }
+
+    function renderCostKpis(costs) {
+      const totalCost = sumOrNull(costs, "totalCost");
+      const coveredDays = costs.reduce((total, item) => total + dateDiffDays(item.periodStart, item.periodEnd), 0);
+      const firstPeriod = costs[0]?.periodStart || "";
+      const lastPeriod = costs[costs.length - 1]?.periodEnd || "";
+
+      els.awsCostRange.textContent = money(totalCost);
+      els.awsAverageDailyCost.textContent = money(totalCost !== null && coveredDays ? totalCost / coveredDays : null);
+      els.awsCostPerDevice.textContent = money(averageAvailable(costs, "costPerDevice"));
+      els.awsCostPerChannel.textContent = money(averageAvailable(costs, "costPerChannel"));
+      els.awsPeriodCovered.textContent = firstPeriod && lastPeriod ? `${firstPeriod} - ${lastPeriod}` : "n/d";
+    }
+
+    function renderCostCharts(costs) {
+      if (typeof Chart === "undefined") {
+        return;
+      }
+
+      upsertLineChart("awsCostChart", "awsCost", costs.map((item) => `${item.periodStart} - ${item.periodEnd}`), [
+        { label: "AWS cost", data: costs.map((item) => item.totalCost ?? 0), color: "#1f7fbf", formatter: money }
+      ], money);
+
+      const serviceTotals = {};
+      for (const snapshot of costs) {
+        for (const [service, amount] of Object.entries(snapshot.services)) {
+          serviceTotals[service] = (serviceTotals[service] || 0) + Number(amount || 0);
+        }
+      }
+
+      upsertBarChart("awsServiceChart", "awsService", Object.keys(serviceTotals), Object.values(serviceTotals), money);
+    }
+
+    function renderCostTable(costs) {
+      els.costTableBody.innerHTML = "";
+      els.costEmptyState.hidden = costs.length !== 0;
+      els.costRowCount.textContent = `${costs.length} ${costs.length === 1 ? "snapshot" : "snapshot"}`;
+
+      const fragment = document.createDocumentFragment();
+      for (const item of costs) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${escapeHtml(item.snapshotId)}</td>
+          <td>${escapeHtml(item.periodStart)} - ${escapeHtml(item.periodEnd)}</td>
+          <td>${money(item.totalCost)}</td>
+          <td>${money(item.averageDailyCost)}</td>
+          <td>${money(item.costPerDevice)}</td>
+          <td>${money(item.costPerChannel)}</td>
+          <td>${escapeHtml(formatDateTime(item.collectedAt))}</td>
+          <td>${escapeHtml(item.source)}</td>
+          <td>${escapeHtml(formatServices(item.services))}</td>
+        `;
+        fragment.appendChild(row);
+      }
+      els.costTableBody.appendChild(fragment);
+    }
+
+    function upsertLineChart(canvasId, key, labels, datasets, valueFormatter = ratio) {
+      const config = {
+        type: "line",
+        data: {
+          labels,
+          datasets: datasets.map((dataset) => ({
+            label: dataset.label,
+            data: dataset.data,
+            borderColor: dataset.color,
+            backgroundColor: `${dataset.color}22`,
+            borderWidth: 2,
+            pointRadius: 2,
+            pointHoverRadius: 4,
+            tension: 0.25,
+            fill: true
+          }))
+        },
+        options: chartOptions(valueFormatter, datasets.length > 1)
+      };
+      upsertChart(canvasId, key, config);
+    }
+
+    function upsertBarChart(canvasId, key, labels, data, valueFormatter = ratio) {
+      const config = {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: "#1f7fbf88",
+            borderColor: "#1f7fbf",
+            borderWidth: 1
+          }]
+        },
+        options: chartOptions(valueFormatter, false)
+      };
+      upsertChart(canvasId, key, config);
+    }
+
+    function upsertChart(canvasId, key, config) {
+      if (charts[key]) {
+        charts[key].data = config.data;
+        charts[key].options = config.options;
+        charts[key].update();
+        return;
+      }
+      charts[key] = new Chart(document.getElementById(canvasId), config);
+    }
+
+    function chartOptions(valueFormatter, showLegend) {
+      return {
+        maintainAspectRatio: false,
+        responsive: true,
+        plugins: {
+          legend: { display: showLegend },
+          tooltip: {
+            mode: "index",
+            intersect: false,
+            callbacks: {
+              label(context) {
+                const label = context.dataset.label ? `${context.dataset.label}: ` : "";
+                return `${label}${valueFormatter(context.parsed.y)}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { maxTicksLimit: 6 } },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0,
+              callback(value) { return valueFormatter(value); }
+            }
+          }
+        }
+      };
     }
 
     function setLoading(isLoading) {
@@ -859,17 +1032,20 @@
       return values.reduce((total, value) => total + value, 0);
     }
 
+    function sumValues(values) {
+      const normalized = values.map(numberValue).filter((value) => value !== null);
+      if (!normalized.length) {
+        return null;
+      }
+      return normalized.reduce((total, value) => total + value, 0);
+    }
+
     function averageAvailable(items, key) {
       const values = items.map((item) => item[key]).filter((value) => value !== null);
       if (!values.length) {
         return null;
       }
       return values.reduce((total, value) => total + value, 0) / values.length;
-    }
-
-    function costAxisMax(values) {
-      const maxValue = Math.max(0, ...values.filter((value) => Number.isFinite(value)));
-      return maxValue > 0.000001 ? maxValue * 1.2 : 0.01;
     }
 
     function numberValue(value) {
@@ -906,11 +1082,9 @@
       if (value === null || value === undefined) {
         return "n/d";
       }
-
       if (value < 1024) {
         return `${integer(value)} B`;
       }
-
       const units = ["KB", "MB", "GB", "TB"];
       let amount = value / 1024;
       let unitIndex = 0;
@@ -921,11 +1095,58 @@
       return `${new Intl.NumberFormat("it-IT", { maximumFractionDigits: 2 }).format(amount)} ${units[unitIndex]}`;
     }
 
+    function formatServices(services) {
+      const entries = Object.entries(services)
+        .sort((a, b) => Number(b[1] || 0) - Number(a[1] || 0))
+        .map(([service, amount]) => `${service}: ${money(Number(amount || 0))}`);
+      return entries.length ? entries.join(" | ") : "n/d";
+    }
+
+    function formatDateTime(value) {
+      if (!value) {
+        return "n/d";
+      }
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return value;
+      }
+      return new Intl.DateTimeFormat("it-IT", {
+        dateStyle: "short",
+        timeStyle: "short"
+      }).format(date);
+    }
+
+    function formatDate(value) {
+      if (!value) {
+        return "n/d";
+      }
+      const date = new Date(`${value}T00:00:00.000Z`);
+      if (Number.isNaN(date.getTime())) {
+        return value;
+      }
+      return new Intl.DateTimeFormat("it-IT", { dateStyle: "medium" }).format(date);
+    }
+
     function formatLocalDate(date) {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
+    }
+
+    function addDays(date, days) {
+      const [year, month, day] = date.split("-").map(Number);
+      const next = new Date(Date.UTC(year, month - 1, day + days));
+      return next.toISOString().slice(0, 10);
+    }
+
+    function dateDiffDays(start, end) {
+      const startTime = Date.parse(`${start}T00:00:00.000Z`);
+      const endTime = Date.parse(`${end}T00:00:00.000Z`);
+      if (Number.isNaN(startTime) || Number.isNaN(endTime)) {
+        return 0;
+      }
+      return Math.max(0, Math.round((endTime - startTime) / 86400000));
     }
 
     function escapeHtml(value) {
