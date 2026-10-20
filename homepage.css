@@ -53,22 +53,9 @@ p {
 .site-header {
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  justify-content:flex-end;
   gap:16px;
   padding-block:22px
-}
-.brand {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:.9rem;
-  font-weight:750;
-  letter-spacing:.1em;
-  text-decoration:none;
-  color:var(--ink)
-}
-.brand img {
-  border-radius:12px
 }
 .language {
   padding:10px 14px;
@@ -79,7 +66,7 @@ p {
   white-space:nowrap
 }
 .hero {
-  padding-block:36px 56px;
+  padding-block:16px 56px;
   text-align:center
 }
 .hero-copy {
@@ -88,6 +75,16 @@ p {
 }
 .hero .store-badges {
   justify-content:center
+}
+.hero-logo {
+  display:block;
+  width:clamp(112px,10vw,128px);
+  margin:0 auto 16px
+}
+.hero-logo img {
+  display:block;
+  width:100%;
+  height:auto
 }
 .hero h1 {
   font-size:clamp(2.1rem,5vw,3.7rem);
@@ -353,7 +350,7 @@ footer a {
 
 @media(min-width:900px) {
   .hero {
-    padding-block:40px 64px
+    padding-block:20px 64px
   }
   .section {
     padding-block:80px
