@@ -1,144 +1,230 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tickness - È uno stato mentale</title>
-  <style>
-    body {
-      background-color: #e6f0f7;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 4px 16px 0 16px;
-    }
-    .app-icon {
-      width: 100px;
-      height: 100px;
-      margin-bottom: 16px;
-    }
-    h1 {
-      font-size: 2em;
-      font-weight: 700;
-      margin: 0;
-    }
-    p.sub {
-      font-size: 1.2em;
-      margin: 8px 0 24px;
-    }
-    .tagline {
-      font-size: 1.5em;
-      font-weight: 700;
-      line-height: 1.5;
-      margin-bottom: 32px;
-    }
-    .download-text {
-      font-size: 1.2em;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #222;
-    }
-    .store-badges {
-      margin: 24px 0;
-    }
-    .store-badges img {
-      height: 60px;
-      margin: 8px;
-      transition: transform 0.2s ease;
-    }
-    .store-badges img:hover {
-      transform: scale(1.05);
-    }
-    footer {
-      font-size: 0.9em;
-      color: #444;
-      margin-top: 40px;
-    }
-    footer a {
-      color: #1a73e8;
-      text-decoration: none;
-      margin: 0 8px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tickness | Calendario, attività e statistiche personalizzate</title>
+<meta name="description" content="Organizza appuntamenti, eventi e attività con Tickness. Categorie personalizzate, checklist, Inbox, condivisione e statistiche. Scopri un nuovo modo di organizzarti.">
+<link rel="canonical" href="https://tickness.com/">
+<link rel="alternate" hreflang="it" href="https://tickness.com/">
+<link rel="alternate" hreflang="en" href="https://tickness.com/index_en.html">
+<link rel="alternate" hreflang="x-default" href="https://tickness.com/">
+<link rel="icon" type="image/png" href="tick.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tickness">
+<meta property="og:locale" content="it_IT">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Tickness | Calendario, attività e statistiche personalizzate">
+<meta property="og:description" content="Organizza appuntamenti, eventi e attività con Tickness. Categorie personalizzate, checklist, Inbox, condivisione e statistiche. Scopri un nuovo modo di organizzarti.">
+<meta property="og:url" content="https://tickness.com/">
+<meta property="og:image" content="https://tickness.com/tick.png">
+<meta property="og:image:alt" content="Tickness">
+<meta name="theme-color" content="#e6f0f7">
+<link rel="stylesheet" href="homepage.css">
+<script src="homepage.js" defer></script>
 </head>
 <body>
-  <a href="share.html" title="Condividi">
-    <img src="tick.png" alt="Tickness App Icon" class="app-icon">
-  </a>
-
-  <h1>TICKNESS</h1>
-  <p class="sub">è uno stato mentale.</p>
-
-  <div class="tagline">
-    Fai ordine.<br>
-    Segna tutto.<br>
-    Libera la mente.
-  </div>
-
-  <div class="download-text">📲 Scarica subito l’app:</div>
-
-  <div class="store-badges">
-    <a href="https://apps.apple.com/it/app/tickness/id6749477728" target="_blank" rel="noopener noreferrer">
-      <img src="app-store-badge-it.svg" alt="Scarica su App Store">
-    </a>
-
-    <a href="https://play.google.com/store/apps/details?id=com.enricomagrella.tickness" target="_blank" rel="noopener noreferrer">
-      <img src="google-play-badge-it.svg" alt="Disponibile su Google Play">
-    </a>
-  </div>
-
-  <div style="max-width: 600px; margin-top: 32px; font-size: 1.1em; line-height: 1.6; color:#333;">
-    <p><strong>Tickness</strong> non è un semplice calendario.<br>
-    Non è nemmeno una classica to-do list.</p>
-
-    <p>
-      È uno spazio progettato per <strong>organizzare le attività nel tempo</strong>,
-      liberare la mente e riportare chiarezza nella tua organizzazione quotidiana.
-    </p>
-
-    <p>
-      I calendari gestiscono eventi.<br>
-      Le to-do list gestiscono attività.
-    </p>
-
-    <p><strong>Tickness prova a unire le due cose.</strong></p>
-
-    <p>Ecco come ti aiuta:</p>
-
-    <ul style="text-align:left; max-width:520px; margin:16px auto; font-size:1em;">
-      <li>📌 Raccogliere in un unico posto tutto ciò che devi ricordare.</li>
-      <li>🗓️ Vedere attività e calendario con più chiarezza, per capire quando fare davvero le cose.</li>
-      <li>🧭 Tenere traccia delle attività “da pianificare” senza perderle.</li>
-      <li>🔄 Sincronizzare meglio le attività tra dispositivi, con un’esperienza più stabile su iOS, Android e macOS.</li>
-      <li>👥 Condividere attività e liste tramite canali, così puoi coordinarti con altre persone quando serve.</li>
-      <li>🎯 Usare una modalità focus attività più curata, per concentrarti su ciò che conta in quel momento.</li>
-      <li>✨ Lavorare con un’interfaccia più pulita e coerente, aggiornata con correzioni e ottimizzazioni della versione 2.5.x.</li>
-    </ul>
-
-    <p style="margin-top:16px;">
-      Tickness unisce la precisione del <em>tick</em> con l’ascolto della <em>mindfulness</em>:
-      meno caos mentale, più spazio per concentrarti su ciò che conta davvero.
-    </p>
-  </div>
-
-  <div style="height: 24px;"></div>
-
-  <a href="index_en.html" title="English version" style="margin-left: 8px; font-size: 3em; text-decoration: none;">🇬🇧</a>
-
-  <footer>
-    <p>
-      <a href="privacy.html">Privacy Policy</a> ·
-      <a href="mailto:enrico.magrella@gmail.com?subject=Tickness">Contatti</a> ·
-      <a href="share">Condividi</a>
-    </p>
-    <p style="margin-top:8px;">
-      © 2026 Enrico Magrella. Tutti i diritti riservati.
-    </p>
-  </footer>
+<a class="skip-link" href="#main">Vai al contenuto</a>
+<header class="site-header wrap">
+<a class="brand" href="share.html" aria-label="Condividi Tickness">
+<img src="tick.png" alt="" width="48" height="48">
+<span>TICKNESS</span>
+</a>
+<a class="language" href="index_en.html" lang="en" hreflang="en">🇬🇧 English</a>
+</header>
+<main id="main">
+<section class="hero wrap" aria-labelledby="hero-title">
+<div class="hero-copy">
+<h1 id="hero-title">TICKNESS <span>è uno stato mentale.</span>
+</h1>
+<p class="tagline">Fai ordine.<br>Segna tutto.<br>Libera la mente.</p>
+<p class="hero-subtitle">Organizza. Personalizza. Analizza.</p>
+<p class="hero-description">La tua vita, i tuoi impegni, le tue attività.<br>Tutto organizzato, a modo tuo.</p>
+<div class="store-badges">
+<a href="https://apps.apple.com/it/app/tickness/id6749477728" target="_blank" rel="noopener noreferrer">
+<img src="app-store-badge-it.svg" alt="Scarica su App Store" width="180" height="60">
+</a>
+<a href="https://play.google.com/store/apps/details?id=com.enricomagrella.tickness" target="_blank" rel="noopener noreferrer">
+<img src="google-play-badge-it.svg" alt="Disponibile su Google Play" width="202" height="60">
+</a>
+</div>
+</div>
+</section>
+<section class="intro wrap section" aria-labelledby="intro-title">
+<p class="eyebrow">Spazio alla chiarezza</p>
+<h2 id="intro-title">Molto più di un calendario.<br>Molto più di una to-do list.</h2>
+<div class="prose">
+<p>Tickness riunisce appuntamenti, eventi, attività e cose da fare in un unico spazio.</p>
+<p>Puoi organizzare tutto attraverso categorie personalizzate, gestire le attività quotidiane e consultare lo storico per scoprire quanto hai fatto nel tempo.</p>
+<p>Un’app flessibile, veloce e pensata per adattarsi alle tue esigenze.</p>
+</div>
+</section>
+<section class="wrap section" aria-labelledby="features-title">
+<h2 id="features-title">Il tuo modo di organizzarti.</h2>
+<div class="feature-grid">
+<article class="feature-card">
+<span class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect x="4" y="4" width="6" height="6" rx="2"/>
+<rect x="14" y="4" width="6" height="6" rx="2"/>
+<rect x="4" y="14" width="6" height="6" rx="2"/>
+<path d="M14 17h6m-3-3v6"/>
+</svg>
+</span>
+<h3>Personalizza</h3>
+<p>Crea categorie con colori e impostazioni personalizzate. Organizza le attività nel modo più adatto a te.</p>
+</article>
+<article class="feature-card">
+<span class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect x="3" y="5" width="18" height="16" rx="3"/>
+<path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2"/>
+</svg>
+</span>
+<h3>Organizza</h3>
+<p>Gestisci appuntamenti, eventi, attività e promemoria attraverso un calendario chiaro e filtrabile.</p>
+</article>
+<article class="feature-card">
+<span class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 4h16v16H4zM4 14h5l2 3h2l2-3h5"/>
+</svg>
+</span>
+<h3>Cattura le idee</h3>
+<p>Usa l’Inbox per raccogliere rapidamente le attività che vuoi organizzare più avanti.</p>
+</article>
+<article class="feature-card">
+<span class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m4 6 2 2 4-4m3 2h7M4 13l2 2 4-4m3 2h7M4 20l2 2 4-4m3 2h7"/>
+</svg>
+</span>
+<h3>Semplifica</h3>
+<p>Checklist, collegamenti rapidi a WhatsApp e navigatore: tutto a portata di mano.</p>
+</article>
+<article class="feature-card">
+<span class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>
+</svg>
+</span>
+<h3>Importa</h3>
+<p>Importa attività da appunti o file CSV per iniziare senza dover inserire tutto manualmente.</p>
+</article>
+<article class="feature-card">
+<span class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 3v18h17M8 16v-5m5 5V7m5 9v-7"/>
+</svg>
+</span>
+<h3>Analizza</h3>
+<p>Consulta lo storico e visualizza grafici e statistiche personalizzate per categoria. Monitora attività, progressi e valori.</p>
+</article>
+<article class="feature-card">
+<span class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="5" cy="12" r="3"/>
+<circle cx="19" cy="5" r="3"/>
+<circle cx="19" cy="19" r="3"/>
+<path d="m8 11 8-5M8 13l8 5"/>
+</svg>
+</span>
+<h3>Condividi</h3>
+<p>Condividi attività e liste attraverso canali sincronizzati tra dispositivi.</p>
+</article>
+</div>
+</section>
+<section class="stats wrap section" aria-labelledby="stats-title">
+<div>
+<p class="eyebrow">La tua attività, nel tempo</p>
+<h2 id="stats-title">Ogni attività conta.<br>Scopri quanto.</h2>
+<p>Tickness conserva lo storico delle tue attività e lo trasforma in grafici e statistiche personalizzate.</p>
+<p>Filtra per categoria e periodo per monitorare ciò che ti interessa: allenamenti, lavori svolti, progressi, guadagni e molto altro.</p>
+</div>
+<div class="stats-media" data-media-slot="statistics" role="group" aria-label="Grafici reali delle statistiche di Tickness">
+<div class="stats-slides">
+<img class="stats-slide is-active" src="images/img_grafico_guadagno.webp" alt="Grafico reale di Tickness: guadagno per mese, da 610 € a 1.100 €, con sei colonne da maggio a dicembre." width="960" height="656" decoding="async">
+<img class="stats-slide" src="images/img_grafico_importo_speso_per_mese.webp" alt="Grafico reale di Tickness: importo speso per mese, 693,96 € ad agosto, 1.340,46 € a settembre e 674,53 € a ottobre." width="878" height="680" decoding="async">
+</div>
+<button class="stats-toggle" type="button" data-pause="Pausa alternanza" data-resume="Riprendi alternanza" aria-pressed="false" hidden>Pausa alternanza</button>
+</div>
+</section>
+<section class="wrap section" aria-labelledby="uses-title">
+<p class="eyebrow">Ogni giorno, a modo tuo</p>
+<h2 id="uses-title">Un’app. Mille modi di usarla.</h2>
+<div class="use-grid">
+<article class="use-card">
+<div class="scenario-media" data-media-slot="life">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect x="4" y="4" width="6" height="6" rx="2"/>
+<rect x="14" y="4" width="6" height="6" rx="2"/>
+<rect x="4" y="14" width="6" height="6" rx="2"/>
+<path d="M14 17h6m-3-3v6"/>
+</svg>
+</div>
+<h3>Vita quotidiana</h3>
+<p>Spesa, checklist, appuntamenti e cose da ricordare.</p>
+</article>
+<article class="use-card">
+<div class="scenario-media" data-media-slot="work">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect x="3" y="5" width="18" height="16" rx="3"/>
+<path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2"/>
+</svg>
+</div>
+<h3>Lavoro</h3>
+<p>Clienti, interventi, eventi e attività professionali.</p>
+</article>
+<article class="use-card">
+<div class="scenario-media" data-media-slot="sport">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 4h16v16H4zM4 14h5l2 3h2l2-3h5"/>
+</svg>
+</div>
+<h3>Sport</h3>
+<p>Allenamenti, costanza e progressi nel tempo.</p>
+</article>
+<article class="use-card">
+<div class="scenario-media" data-media-slot="study">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m4 6 2 2 4-4m3 2h7M4 13l2 2 4-4m3 2h7M4 20l2 2 4-4m3 2h7"/>
+</svg>
+</div>
+<h3>Studio</h3>
+<p>Lezioni, scadenze e attività da completare.</p>
+</article>
+</div>
+</section>
+<section class="philosophy wrap section" aria-labelledby="philosophy-title">
+<span class="mindful-mark" aria-hidden="true">✓</span>
+<h2 id="philosophy-title">Meno caos mentale.<br>Più spazio per ciò che conta.</h2>
+<div class="prose">
+<p>Tickness unisce la precisione del tick alla filosofia della mindfulness.</p>
+<p>Raccogli i pensieri, organizza gli impegni e ritrova chiarezza nella quotidianità.</p>
+<p>Perché organizzarsi non significa soltanto fare di più. Significa anche vivere meglio il proprio tempo.</p>
+</div>
+</section>
+<section class="final-cta wrap section" aria-labelledby="cta-title">
+<h2 id="cta-title">Organizza tutto, a modo tuo.</h2>
+<div class="store-badges">
+<a href="https://apps.apple.com/it/app/tickness/id6749477728" target="_blank" rel="noopener noreferrer">
+<img src="app-store-badge-it.svg" alt="Scarica su App Store" width="180" height="60">
+</a>
+<a href="https://play.google.com/store/apps/details?id=com.enricomagrella.tickness" target="_blank" rel="noopener noreferrer">
+<img src="google-play-badge-it.svg" alt="Disponibile su Google Play" width="202" height="60">
+</a>
+</div>
+</section>
+</main>
+<footer class="wrap">
+<p>
+<a href="privacy.html">Privacy Policy</a>
+<span aria-hidden="true"> · </span>
+<a href="mailto:enrico.magrella@gmail.com?subject=Tickness">Contatti</a>
+<span aria-hidden="true"> · </span>
+<a href="share">Condividi</a>
+</p>
+<p>© 2026 Enrico Magrella. Tutti i diritti riservati.</p>
+</footer>
 </body>
 </html>
