@@ -50,12 +50,14 @@ p {
   width:min(1120px,calc(100% - 40px));
   margin-inline:auto
 }
-.site-header {
+.site-header.wrap {
+  width:auto;
+  margin-inline:20px;
   display:flex;
   align-items:center;
   justify-content:flex-end;
   gap:16px;
-  padding-block:22px
+  padding-block:12px 0
 }
 .language {
   padding:10px 14px;
@@ -66,7 +68,7 @@ p {
   white-space:nowrap
 }
 .hero {
-  padding-block:16px 56px;
+  padding-block:0 56px;
   text-align:center
 }
 .hero-copy {
@@ -350,7 +352,7 @@ footer a {
 
 @media(min-width:900px) {
   .hero {
-    padding-block:20px 64px
+    padding-block:0 64px
   }
   .section {
     padding-block:80px
