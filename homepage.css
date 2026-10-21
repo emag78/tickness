@@ -225,22 +225,8 @@ svg {
   opacity:1;
   pointer-events:auto
 }
-.stats-toggle {
-  display:block;
-  margin:16px auto 0;
-  padding:8px 16px;
-  min-height:44px;
-  border:1px solid #86a8bf;
-  border-radius:24px;
-  background:transparent;
-  color:#e0edf5;
-  font:inherit;
-  font-size:.85rem;
-  cursor:pointer
-}
-.stats-toggle[hidden] {
-  display:none
-}
+
+
 .scenario-media {
   height:140px;
   border-radius:20px;
@@ -403,8 +389,6 @@ footer a {
     grid-area:auto;
     opacity:1
   }
-  .stats-toggle {
-    display:none
-  }
+
   
 }
