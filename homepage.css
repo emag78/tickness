@@ -392,3 +392,94 @@ footer a {
 
   
 }
+
+/* Real app screenshots: manual gallery, isolated from the statistics slideshow. */
+.visually-hidden {
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0
+}
+.app-gallery-heading { max-width:720px; margin-bottom:32px }
+.app-gallery-heading h2 { margin-bottom:16px }
+.app-gallery-heading > p { font-size:1.1rem; margin-bottom:0 }
+.app-gallery-stage {
+  padding:28px 20px 20px;
+  border:1px solid var(--line);
+  border-radius:32px;
+  background:var(--paper)
+}
+.app-gallery-slide { display:grid; gap:24px; min-width:0 }
+.app-gallery-slide[hidden], .app-gallery-controls[hidden] { display:none }
+.app-gallery-copy { min-height:260px; align-self:center }
+.app-gallery-copy .eyebrow { margin-bottom:16px }
+.app-gallery-copy h3 { font-size:clamp(1.65rem,3vw,2.4rem); max-width:440px; margin-bottom:18px }
+.app-gallery-copy > p:last-child { max-width:440px; font-size:1.05rem; margin-bottom:0 }
+.app-gallery-media { min-width:0; text-align:center; touch-action:pan-y pinch-zoom }
+.app-gallery-zoom {
+  display:block;
+  width:max-content;
+  max-width:100%;
+  margin-inline:auto;
+  padding:0;
+  border:0;
+  border-radius:18px;
+  background:transparent;
+  color:inherit;
+  cursor:zoom-in;
+  box-shadow:0 12px 32px #18374a18
+}
+.app-gallery-zoom img {
+  display:block;
+  width:auto;
+  height:min(430px,60svh);
+  max-width:100%;
+  object-fit:contain;
+  border-radius:18px
+}
+.app-gallery-hint { margin:14px 0 0; font-size:.8rem; color:var(--muted) }
+.app-gallery-controls { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:24px }
+.app-gallery-arrow, .app-gallery-dot, .app-lightbox-close { font:inherit; cursor:pointer; color:var(--blue) }
+.app-gallery-arrow { width:44px; height:44px; flex-shrink:0; background:transparent; border:1px solid var(--line); border-radius:50%; font-size:1.4rem }
+.app-gallery-dots { display:flex; align-items:center }
+.app-gallery-dot { display:grid; place-items:center; width:28px; height:44px; padding:0; border:0; background:transparent }
+.app-gallery-dot span { width:7px; height:7px; border-radius:50%; background:#a5bfce; transition:background .15s ease }
+.app-gallery-dot[aria-current="true"] span { background:var(--blue); box-shadow:0 0 0 4px #23639919 }
+.app-gallery-arrow:hover { background:#e4eff7 }
+.app-gallery.is-ready .app-gallery-slide:not([hidden]) { animation:app-gallery-reveal .22s ease }
+@keyframes app-gallery-reveal { from { opacity:.4 } to { opacity:1 } }
+.app-gallery-lightbox { width:min(760px,calc(100% - 24px)); max-height:calc(100dvh - 24px); padding:0; border:1px solid var(--line); border-radius:24px; background:var(--paper); color:var(--ink) }
+.app-gallery-lightbox::backdrop { background:#102b40bf }
+.app-lightbox-panel { padding:16px }
+.app-lightbox-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:12px }
+.app-lightbox-toolbar p { color:var(--ink); font-weight:600; margin:0 }
+.app-lightbox-close { flex-shrink:0; width:44px; height:44px; border:1px solid var(--line); border-radius:50%; background:transparent; font-size:1.7rem }
+.app-lightbox-image { display:block; width:100%; height:auto; max-height:calc(100dvh - 130px); object-fit:contain; margin:auto }
+body.app-lightbox-open { overflow:hidden }
+@media(min-width:600px) {
+  .app-gallery-stage { padding:40px 32px 24px }
+  .app-gallery-copy { min-height:210px }
+}
+@media(min-width:900px) {
+  .app-gallery-stage { padding:48px 56px 32px }
+  .app-gallery-slide { grid-template-columns:1.15fr 1fr; align-items:center; gap:64px }
+  .app-gallery-copy { min-height:290px }
+  .app-gallery-zoom img { height:570px }
+  .app-gallery-controls { justify-content:flex-start; margin-top:20px }
+}
+@media(prefers-reduced-motion:reduce) {
+  .app-gallery.is-ready .app-gallery-slide:not([hidden]) { animation:none }
+  .app-gallery-dot span { transition:none }
+}
+
+@media(max-width:360px) {
+  .app-gallery-copy { min-height:310px }
+}
+@media(max-width:405px) {
+  .app-gallery-dots { display:grid; grid-template-columns:repeat(4,28px); justify-content:center }
+}
