@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Informativa sulla Privacy – Tickness</title>
   <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: Arial, sans-serif;
       max-width: 800px;
@@ -13,6 +15,7 @@
       line-height: 1.6;
       background-color: #f8f8f8;
       color: #333;
+      overflow-wrap: anywhere;
     }
     h1 {
       color: #3A7BD5;
@@ -28,72 +31,129 @@
       margin-top: 40px;
       font-size: 0.9em;
     }
+    nav { background: #fff; padding: 14px 20px; border: 1px solid #ddd; }
+    nav ol { margin: 0; padding-left: 22px; }
+    h2 { scroll-margin-top: 16px; }
+    li { margin-bottom: 8px; }
+    a:focus-visible { outline: 2px solid #3A7BD5; outline-offset: 3px; }
+    @media (max-width: 480px) { body { padding: 18px; } h1 { font-size: 1.75rem; } h2 { font-size: 1.3rem; } }
   </style>
 </head>
 <body>
-  <h1>Informativa sulla Privacy</h1>
-
-  <p><strong>Tickness</strong> si impegna a rispettare la tua privacy e a proteggere i tuoi dati personali.</p>
-
-  <h2>1. Dati raccolti</h2>
-  <p>L'app non raccoglie né memorizza dati personali su server esterni. Tutti i dati sono salvati localmente sul tuo dispositivo.</p>
-
-  <h2>2. Utilizzo del microfono</h2>
-  <p>L'autorizzazione al microfono è utilizzata esclusivamente per consentire all’utente di dettare e trascrivere note all'interno dell'app. Nessun audio viene registrato o trasmesso a server esterni.</p>
-
-  <h2>3. Integrazione con il calendario</h2>
-  <p>Se scegli di esportare un’attività nel tuo calendario, l'app richiederà il permesso per aggiungere eventi al calendario del dispositivo. Questi dati restano sul dispositivo e non vengono condivisi.</p>
-
-  <h2>4. Backup su Google Drive</h2>
-  <p>
-    Se scegli di utilizzare la funzione di backup, l'app richiederà l'autorizzazione per accedere al tuo Google Drive. 
-    Questo accesso è limitato allo scope <code>drive.file</code>, il che significa che l'app può solo creare, visualizzare e aggiornare 
-    il file di backup generato da Tickness. 
-    Il file di backup è archiviato nel tuo Google Drive personale e rimane sotto il tuo pieno controllo: 
-    puoi eliminarlo in qualsiasi momento direttamente da Google Drive.
-  </p>
-  <p>
-    Nessun altro file presente nel tuo Google Drive è accessibile all'app. 
-    I dati di backup non vengono trasmessi a server esterni né condivisi con terze parti.
-  </p>
-
-<h2>5. Generazione dei link d’importazione (servizio backend Tickness)</h2>
-<p>
-  Alcune funzionalità dell’app Tickness si appoggiano a un servizio backend sicuro ospitato su server AWS
-  per la generazione automatica dei link d’importazione (deeplink).
-</p>
-<p>
-  Le informazioni inviate a questo servizio vengono utilizzate esclusivamente per consentire la generazione,
-  il funzionamento e il recupero dei link d’importazione e vengono conservate in modo sicuro 
-  per un periodo massimo di <strong>30 giorni</strong>.
-</p>
-<p>
-  Trascorso tale periodo, i dati vengono eliminati automaticamente.
-  Le informazioni non vengono utilizzate per finalità diverse, né condivise con terze parti,
-  né associate in modo diretto all’identità personale dell’utente.
-</p>
-
-<h2>6. Sincronizzazione tramite canale e crittografia end-to-end</h2>
-<p>
-  Tickness permette di sincronizzare attività e calendari tra più dispositivi e, se scelto dall’utente,
-  di condividere un canale di sincronizzazione con altri utenti autorizzati. I dati sincronizzati tramite
-  canale vengono protetti con crittografia end-to-end: le informazioni vengono cifrate sul dispositivo
-  prima dell’invio e possono essere lette solo dai dispositivi autorizzati appartenenti allo stesso canale.
-  Il servizio backend di Tickness gestisce il trasporto, la sincronizzazione e la disponibilità tecnica
-  dei dati cifrati, ma non è progettato per leggere il contenuto in chiaro delle attività condivise.
-</p>
-
-  <h2>7. Nessun tracciamento</h2>
-  <p>L'app non include pubblicità, analisi o sistemi di tracciamento di alcun tipo.</p>
-
-  <h2>8. Contatti</h2>
-  <p>Per domande o dubbi relativi a questa informativa, puoi contattarmi a: 
-    <a href="mailto:enrico.magrella@gmail.com">enrico.magrella@gmail.com</a>
-  </p>
-
-  <footer>
-    <p>Ultimo aggiornamento: ottobre 2025</p>
-    <p><a href="index.html">← Torna alla homepage</a></p>
-  </footer>
+  <header><h1>Informativa sulla Privacy</h1>
+  <p>Versione di riferimento: Tickness 2.13.2+100. <strong>Data di efficacia: 2 novembre 2026. Ultimo aggiornamento: 2 novembre 2026.</strong></p>
+  <p>Tickness è un’applicazione principalmente locale e offline-first: conserva normalmente i tuoi dati sul dispositivo e funziona senza Internet. Sync, statistiche facoltative e backup personali sono funzioni distinte. I servizi cloud vengono utilizzati per le funzionalità online che scegli di utilizzare e richiedono una connessione.</p></header>
+  <nav aria-label="In questa informativa"><ol>
+      <li><a href="#local-data">Dati locali e registrazione dell’installazione</a></li>
+      <li><a href="#device-services">Microfono, dettatura e contatti</a></li>
+      <li><a href="#external-services">Calendario, mappe e altri servizi</a></li>
+      <li><a href="#backups">Backup su Google Drive e iCloud</a></li>
+      <li><a href="#sharing">Condivisione tramite link</a></li>
+      <li><a href="#sync">Sincronizzazione e canali condivisi</a></li>
+      <li><a href="#statistics">Statistiche facoltative e diagnostica</a></li>
+      <li><a href="#controller">Titolare del trattamento</a></li>
+      <li><a href="#providers">Destinatari, fornitori e trasferimenti</a></li>
+      <li><a href="#retention">Conservazione e cancellazione</a></li>
+      <li><a href="#legal-bases">Finalità e basi giuridiche</a></li>
+      <li><a href="#rights">Diritti e richieste di cancellazione</a></li>
+      <li><a href="#updates">Scelte, versioni precedenti e aggiornamenti</a></li>
+  </ol></nav>
+  <main>
+  <section aria-labelledby="local-data">
+  <h2 id="local-data">1. Dati locali e registrazione dell’installazione</h2>
+  <p>Attività, categorie e preferenze sono normalmente conservate sul dispositivo. Le attività non condivise non vengono inviate automaticamente a Sync, ma possono essere trasmesse se scegli un backup, un link o un’esportazione.</p>
+  <p>Dalla versione <strong>2.13.2+100</strong>, il dispositivo viene registrato su AWS soltanto se serve a Sync, compresa una richiesta di adesione pendente, oppure se acconsenti alle <a href="#statistics">statistiche facoltative</a>. Il solo utilizzo locale non richiede un profilo remoto.</p>
+  <p>Il profilo comprende un ID casuale persistente, <strong>pseudonimo e non anonimo</strong>; nome tecnico o scelto da te; piattaforma, versione e build; date di registrazione, aggiornamento, attività e scadenza; preferenza statistica e indicazione della precedente creazione di canali. Il nome scelto può contenere dati personali. La versione registrata è l’ultima comunicata, non necessariamente quella attuale.</p>
+  <p>Questi dati consentono di riconoscere il dispositivo, fornire Sync e gestire compatibilità e assistenza oppure, con consenso, le statistiche. Per proteggere l’accesso alle funzioni online, Tickness utilizza credenziali tecniche conservate in modo sicuro. Non sono richiesti nome anagrafico o email. L’ID non è pubblicitario e non è usato per pubblicità, vendita di dati o profilazione commerciale.</p>
+  <p><strong>Quando non servono più né Sync né le statistiche, l’app richiede la cancellazione del profilo remoto.</strong> Se Sync resta necessaria, la revoca interrompe le statistiche ma mantiene il profilo. L’ID e la credenziale locali restano sul dispositivo. Per tempi ed eccezioni vedi la <a href="#retention">sezione 10</a>.</p>
+  </section>
+  <section aria-labelledby="device-services">
+  <h2 id="device-services">2. Microfono, dettatura e contatti</h2>
+  <p>Se detti una nota, il riconoscimento vocale può inviare audio al fornitore del servizio, secondo dispositivo e impostazioni. Tickness richiede i permessi necessari e non invia l’audio al proprio backend. Il testo trascritto viene trattato come le altre note.</p>
+  <p>Puoi inserire nelle note i contatti selezionati, come nome, telefono o email. La rubrica non viene caricata automaticamente su Tickness; i dati inseriti possono essere inclusi nelle condivisioni e nei backup che scegli.</p>
+  </section>
+  <section aria-labelledby="external-services">
+  <h2 id="external-services">3. Calendario, mappe e altri servizi</h2>
+  <p>Esportando un’attività nel calendario, trasmetti al servizio scelto titolo, date, note e luogo inclusi; il calendario può sincronizzarli con il tuo account. Mappe, collegamenti e strumenti di condivisione ricevono le informazioni selezionate secondo le proprie regole privacy. Tickness non rileva automaticamente la posizione GPS: i luoghi provengono dai dati inseriti o importati.</p>
+  <p>Su iOS e Android, i controlli degli aggiornamenti inviano ai servizi Apple o Google una richiesta relativa all’app e dati di rete, come l’IP, senza includere attività o ID installazione.</p>
+  </section>
+  <section aria-labelledby="backups">
+  <h2 id="backups">4. Backup su Google Drive e iCloud</h2>
+  <p>I backup Google Drive e iCloud sono <strong>facoltativi, distinti da Sync</strong> e conservati nel tuo account personale, non in un archivio centralizzato di Tickness. Google Drive concede all’app accesso soltanto ai file creati o autorizzati per essa, non a tutto il Drive. Per il ripristino, l’app recupera la copia dall’account scelto.</p>
+  <p>I backup possono includere attività, categorie e, per i canali condivisi, informazioni sui membri e chiavi di lettura. <strong>Tickness non aggiunge una cifratura applicativa al file prima del caricamento.</strong> Le copie sono trasferite al servizio personale scelto, non al backend AWS. L’app conserva localmente riferimenti all’account e all’ultimo backup, come email, identificativi e data.</p>
+  <p>Puoi gestire ed eliminare le copie tramite Google Drive o iCloud, secondo le relative regole su versioni e cestini. Cambiare account, disconnetterlo o disinstallare Tickness non elimina automaticamente i backup già creati.</p>
+  </section>
+  <section aria-labelledby="sharing">
+  <h2 id="sharing">5. Condivisione tramite link</h2>
+  <p>Generare un link, anche solo per copiarlo, invia ad AWS le attività selezionate: titoli, note, checklist, categorie, date, luoghi, ricorrenze e altri dati inclusi. Il trasferimento è protetto, ma <strong>i contenuti non usano la cifratura applicativa di Sync e sono leggibili dal servizio</strong>.</p>
+  <p>Chi possiede il link può accedere ai contenuti e importarli finché disponibili. Se utilizzi WhatsApp, anche il messaggio preparato e i titoli selezionati sono trasmessi a quel servizio.</p>
+  <p>La scadenza prevista è di <strong>30 giorni</strong> dalla creazione. La cancellazione è asincrona: il link può restare utilizzabile fino alla rimozione effettiva.</p>
+  </section>
+  <section aria-labelledby="sync">
+  <h2 id="sync">6. Sincronizzazione e canali condivisi</h2>
+  <p><strong>Sync è facoltativa.</strong> Mantiene allineate attività e categorie condivise tra dispositivi autorizzati, conservando su AWS contenuti cifrati e metadati necessari. Le modifiche si propagano nei canali: Sync non è un backup personale separato. I partecipanti autorizzati possono leggere e conservare copie dei dati condivisi.</p>
+  <p>I contenuti principali delle attività, come titolo, note, checklist, pianificazione e luogo, sono cifrati sul dispositivo prima dell’invio. Restano leggibili dal servizio identificativi, stati, date, versioni e autori delle modifiche, associazioni e configurazioni delle categorie, nomi di categorie, canali e dispositivi. Sono trattati anche appartenenze, inviti e richieste di adesione.</p>
+  <p>Le connessioni sono protette. La cifratura delle attività non si estende a tutti i metadati, ai link o ai backup personali.</p>
+  </section>
+  <section aria-labelledby="statistics">
+  <h2 id="statistics">7. Statistiche facoltative e diagnostica</h2>
+  <p>Le statistiche sono <strong>disattivate per impostazione predefinita</strong> e richiedono un consenso esplicito. Sono indipendenti da Sync: rifiutarle non limita Sync o le funzioni locali. Puoi cambiare la scelta in qualsiasi momento nelle Impostazioni.</p>
+  <p>Con il consenso raccogliamo conteggi giornalieri e complessivi su registrazione e gestione dei dispositivi, utilizzo dei canali e degli inviti, adesioni, limiti del servizio e modifiche o rimozioni di attività e categorie condivise. Conteggiamo anche dispositivi e canali attivi. <strong>Il testo delle attività non viene usato per queste statistiche</strong>; non sono un registro completo delle azioni o delle aperture dell’app.</p>
+  <p>Gli indicatori giornalieri comprendono ID dell’installazione o del canale, tipo di evento, conteggi e date. I totali aggregati sono separati e non elencano gli ID individuali, ma non sono necessariamente anonimi in ogni contesto. Nei canali condivisi, un conteggio può derivare dall’azione di un partecipante consenziente, senza indicare il consenso di tutti i membri.</p>
+  <p>L’attivazione attende la conferma del servizio. <strong>La revoca è salvata subito e interrompe la partecipazione facoltativa sul dispositivo, anche offline.</strong> Se il servizio non è raggiungibile, l’app conserva la scelta e ritenta l’aggiornamento; alcuni errori richiedono assistenza. Il servizio remoto può mantenere temporaneamente la scelta precedente e completare elaborazioni già avviate. La revoca non cancella automaticamente i conteggi storici.</p>
+  <p>Restano distinti, anche con statistiche OFF, log operativi e di sicurezza e metriche su richieste, errori, prestazioni e costi. I fornitori possono trattare IP e dati di rete; l’IP non fa parte del profilo del dispositivo. Nei percorsi verificati non sono attivi SDK pubblicitari o servizi esterni di analytics/crash reporting. Le notifiche dell’app sono locali.</p>
+  </section>
+  <section aria-labelledby="controller">
+  <h2 id="controller">8. Titolare del trattamento</h2>
+  <p><strong>Enrico Magrella</strong><br>Sviluppatore indipendente di Tickness, persona fisica<br>Email privacy: <a href="mailto:enrico.magrella@gmail.com">enrico.magrella@gmail.com</a></p>
+  </section>
+  <section aria-labelledby="providers">
+  <h2 id="providers">9. Destinatari, fornitori e trasferimenti</h2>
+  <p><strong>AWS</strong> ospita Sync, profili dei dispositivi, contenuti dei link, statistiche autorizzate e servizi tecnici di Tickness. La regione applicativa è Francoforte, Germania (UE). AWS non è l’archivio personale principale né il servizio di backup dell’utente. I destinatari dei link e i partecipanti autorizzati ai canali ricevono i dati condivisi.</p>
+  <p>Per i dati trattati per conto del cliente, AWS opera come responsabile secondo il <a href="https://d1.awsstatic.com/legal/aws-dpa/aws-dpa.pdf">Data Processing Addendum</a>, incorporato nei <a href="https://aws.amazon.com/service-terms/">termini del servizio</a> nei casi previsti. Per propri dati di account e servizio può agire come titolare autonomo secondo l’<a href="https://aws.amazon.com/privacy/">informativa AWS</a>. La regione europea non esclude trasferimenti fuori dal SEE: i termini pubblici prevedono clausole contrattuali standard ove applicabili, salvo altri meccanismi riconosciuti. Puoi chiedere al titolare informazioni e copia delle garanzie pertinenti.</p>
+  <p><strong>Gmail</strong> è utilizzato per gestire email di assistenza e privacy, con indirizzi, messaggi, allegati e dati di comunicazione. Google tratta i dati del servizio secondo le proprie <a href="https://policies.google.com/privacy?hl=it">Norme sulla privacy</a>, come titolare per le proprie finalità. La sua infrastruttura è globale; le <a href="https://policies.google.com/privacy/frameworks?hl=it">garanzie sui trasferimenti internazionali</a> comprendono decisioni di adeguatezza, Data Privacy Framework e clausole contrattuali standard, secondo il trasferimento interessato.</p>
+  <p><strong>Altri servizi scelti:</strong> Google Drive, iCloud, calendario, riconoscimento vocale, mappe e condivisione seguono le condizioni dei rispettivi fornitori; consulta anche l’<a href="https://www.apple.com/legal/privacy/">informativa Apple</a>. I backup personali sono separati dalla casella Gmail del titolare. I dati possono essere comunicati alle autorità quando richiesto dalla legge.</p>
+  </section>
+  <section aria-labelledby="retention">
+  <h2 id="retention">10. Conservazione e cancellazione</h2>
+  <p>Le scadenze automatiche indicano quando i dati diventano idonei alla rimozione. <strong>La cancellazione è asincrona e può avvenire successivamente.</strong></p>
+  <ul>
+  <li><strong>Dati locali:</strong> fino alla rimozione tramite l’app o il sistema. Il reset locale non elimina dati cloud o copie altrui.</li>
+  <li><strong>Profilo del dispositivo:</strong> 365 giorni dall’ultimo aggiornamento tecnico; finché serve a Sync o alle statistiche, gli aggiornamenti possono rinnovare il termine. Quando non serve più, l’app ne richiede la cancellazione senza attendere la scadenza.</li>
+  <li><strong>Statistiche:</strong> indicatori giornalieri per 7 giorni. Aggregati e riepiloghi non hanno una scadenza automatica generale: sono conservati secondo la necessità di analizzare andamento e affidabilità del servizio e gestire richieste sui dati; la rimozione richiede valutazione e intervento manuale.</li>
+  <li><strong>Link:</strong> 30 giorni dalla creazione.</li>
+  <li><strong>Sync:</strong> canali attivi, appartenenze e contenuti correnti non hanno una scadenza generale, essendo necessari alle funzioni condivise. Attività completate o eliminate e categorie eliminate o non più condivise ricevono normalmente 30 giorni; attività rimosse dalla condivisione in gruppo, 90 giorni. Le cronologie delle attività ricevono normalmente 90 giorni, oppure 180 per la rimozione dalla condivisione in gruppo. Alcune cronologie delle categorie seguono i 30 giorni del dato finale; le altre non hanno una scadenza generale.</li>
+  <li><strong>Chiusura definitiva del canale:</strong> ai dati operativi, comprese appartenenze e cronologie, viene assegnata una scadenza di 7 giorni dalla chiusura, preservando termini precedenti più brevi. L’uscita di un partecipante non chiude il canale.</li>
+  <li><strong>Altri dati tecnici:</strong> inviti e richieste di adesione seguono la propria validità; la scadenza tecnica può differire dal periodo di recuperabilità. Connessioni temporanee: 2 giorni. Log applicativi Tickness verificati: 7 giorni, senza estendere tale durata a ogni log infrastrutturale. Audit amministrativi: 90 giorni dalla creazione, senza rinnovo, per riferimenti a canali e attività, impronte tecniche, conteggi e date.</li>
+  <li><strong>Backup personali:</strong> secondo impostazioni e regole di Google Drive o iCloud, comprese versioni e cestini; nessuna scadenza è imposta dall’app.</li>
+  <li><strong>Email:</strong> per gestire la richiesta e i seguiti; successivamente, solo quanto necessario per obblighi applicabili o tutela di diritti. La rimozione è manuale, secondo le regole di Gmail.</li>
+  </ul>
+  <p>Offline, errori di autenticazione o appartenenze cloud ancora attive possono ritardare la cancellazione del profilo; se il problema persiste, contatta il titolare. La cancellazione del profilo non elimina automaticamente contenuti Sync, copie dei partecipanti o altri riferimenti all’ID. I dati senza una scadenza automatica vengono conservati finché necessari al funzionamento del servizio e possono essere rimossi manualmente, nel rispetto dei diritti degli utenti.</p>
+  <p>Non sono configurati backup aggiuntivi nelle funzionalità AWS esaminate. Eventuali copie infrastrutturali del fornitore sono distinte dai backup personali: le scadenze sopra indicate non ne assicurano la rimozione simultanea. Le richieste di cancellazione o limitazione devono essere considerate anche in caso di ripristino.</p>
+  </section>
+  <section aria-labelledby="legal-bases">
+  <h2 id="legal-bases">11. Finalità e basi giuridiche</h2>
+  <ul>
+  <li><strong>Sync, link e altre funzioni richieste:</strong> esecuzione del servizio, art. 6(1)(b) GDPR, per i dati necessari, compresa la registrazione richiesta da Sync.</li>
+  <li><strong>Statistiche facoltative e relativa registrazione:</strong> consenso, art. 6(1)(a) GDPR. La revoca non pregiudica la liceità del trattamento precedente.</li>
+  <li><strong>Sicurezza, log e affidabilità:</strong> legittimo interesse alla protezione del servizio, prevenzione degli abusi e gestione degli errori, art. 6(1)(f) GDPR, nei limiti di necessità e proporzionalità.</li>
+  <li><strong>Gestione dei diritti e obblighi legali:</strong> art. 6(1)(c) GDPR, per gli adempimenti dovuti.</li>
+  </ul>
+  <p>Il consenso statistico è separato dai permessi del dispositivo e dal servizio Sync. Il legittimo interesse non sostituisce un eventuale consenso richiesto per accedere a informazioni sul dispositivo. Non adottiamo decisioni esclusivamente automatizzate con effetti giuridici o analogamente significativi.</p>
+  </section>
+  <section aria-labelledby="rights">
+  <h2 id="rights">12. Diritti e richieste di cancellazione</h2>
+  <p>Scrivi a <a href="mailto:enrico.magrella@gmail.com">enrico.magrella@gmail.com</a> per esercitare, nei casi previsti dal GDPR, accesso, rettifica, cancellazione, limitazione, portabilità e opposizione. Puoi revocare le statistiche nelle Impostazioni e presentare reclamo al <a href="https://www.garanteprivacy.it/">Garante per la protezione dei dati personali</a> o all’autorità competente.</p>
+  <p>Rispondiamo di regola entro un mese, comunicando eventuali proroghe motivate. Puoi indicare l’ID installazione disponibile nelle Impostazioni per agevolare la ricerca; non inviare credenziali, chiavi Sync o backup completi. Le verifiche d’identità sono proporzionate.</p>
+  <p>Revocare le statistiche non cancella tutti i dati: per una cancellazione più ampia, specifica la richiesta. Valuteremo anche obblighi applicabili e diritti degli altri partecipanti; il solo ID non permette di individuare ogni dato nei contenuti cifrati. L’opposizione al legittimo interesse è valutata secondo la tua situazione e i presupposti dell’articolo 21 GDPR.</p>
+  </section>
+  <section aria-labelledby="updates">
+  <h2 id="updates">13. Scelte, versioni precedenti e aggiornamenti</h2>
+  <p>Sync, statistiche, backup, link e servizi esterni sono scelte separate. Rifiutare un’autorizzazione può impedire la relativa funzione, ma puoi usare le funzioni locali senza Sync e senza statistiche.</p>
+  <p>Le versioni precedenti alla 2.13.2+100 possono registrare automaticamente il dispositivo. L’app aggiornata applica le nuove condizioni quando può aggiornare il servizio; vecchi client possono ancora inviare richieste. I profili di dispositivi non più utilizzati possono restare fino alla scadenza o a una richiesta specifica. Disinstallare o non riaprire l’app non avvia da solo la cancellazione remota.</p>
+  <p>L’informativa è disponibile sul sito tickness.com e nell’app. Le modifiche sostanziali saranno comunicate con modalità adeguate.</p>
+  </section>
+  </main>
+  <footer><p>Data di efficacia: 2 novembre 2026. Ultimo aggiornamento: 2 novembre 2026. Versione di riferimento: 2.13.2+100.</p><p><a href="https://tickness.com/">Torna a tickness.com</a></p></footer>
 </body>
 </html>
