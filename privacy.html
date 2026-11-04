@@ -41,7 +41,7 @@
 </head>
 <body>
   <header><h1>Informativa sulla Privacy</h1>
-  <p>Versione di riferimento: Tickness 2.14.0+100. <strong>Data di efficacia: 2 novembre 2026. Ultimo aggiornamento: 2 novembre 2026.</strong></p>
+  <p>Versione di riferimento: Tickness 2.14.0+100. <strong>Data di efficacia: 2 novembre 2026. Ultimo aggiornamento: 4 novembre 2026.</strong></p>
   <p>Tickness è un’applicazione principalmente locale e offline-first: conserva normalmente i tuoi dati sul dispositivo e funziona senza Internet. Sync, statistiche facoltative e backup personali sono funzioni distinte. I servizi cloud vengono utilizzati per le funzionalità online che scegli di utilizzare e richiedono una connessione.</p></header>
   <nav aria-label="In questa informativa"><ol>
       <li><a href="#local-data">Dati locali e registrazione dell’installazione</a></li>
@@ -69,7 +69,7 @@
   </section>
   <section aria-labelledby="device-services">
   <h2 id="device-services">2. Microfono, dettatura e contatti</h2>
-  <p>Se detti una nota, il riconoscimento vocale può inviare audio al fornitore del servizio, secondo dispositivo e impostazioni. Tickness richiede i permessi necessari e non invia l’audio al proprio backend. Il testo trascritto viene trattato come le altre note.</p>
+  <p>La dettatura delle note è facoltativa. Su Android, Tickness utilizza il servizio di riconoscimento vocale configurato sul dispositivo tramite SpeechRecognizer. Secondo il servizio e le impostazioni, l’audio può essere elaborato sul dispositivo oppure trasmesso ai server del fornitore per ottenere la trascrizione. Tickness non richiede una modalità esclusivamente offline e non invia l’audio al proprio backend. Il trattamento dell’audio da parte del fornitore segue le sue condizioni e la sua informativa privacy. Tickness richiede i permessi necessari; il testo trascritto viene trattato come le altre note.</p>
   <p>Puoi inserire nelle note i contatti selezionati, come nome, telefono o email. La rubrica non viene caricata automaticamente su Tickness; i dati inseriti possono essere inclusi nelle condivisioni e nei backup che scegli.</p>
   </section>
   <section aria-labelledby="external-services">
@@ -97,11 +97,11 @@
   </section>
   <section aria-labelledby="statistics">
   <h2 id="statistics">7. Statistiche facoltative e diagnostica</h2>
-  <p>Le statistiche sono <strong>disattivate per impostazione predefinita</strong> e richiedono un consenso esplicito. Sono indipendenti da Sync: rifiutarle non limita Sync o le funzioni locali. Puoi cambiare la scelta in qualsiasi momento nelle Impostazioni.</p>
+  <p>Le statistiche facoltative di Tickness descritte in questa sezione sono <strong>disattivate per impostazione predefinita</strong> e richiedono un consenso esplicito. Sono indipendenti da Sync: rifiutarle non limita Sync o le funzioni locali. Puoi cambiare la scelta in qualsiasi momento nelle Impostazioni.</p>
   <p>Con il consenso raccogliamo conteggi giornalieri e complessivi su registrazione e gestione dei dispositivi, utilizzo dei canali e degli inviti, adesioni, limiti del servizio e modifiche o rimozioni di attività e categorie condivise. Conteggiamo anche dispositivi e canali attivi. <strong>Il testo delle attività non viene usato per queste statistiche</strong>; non sono un registro completo delle azioni o delle aperture dell’app.</p>
   <p>Gli indicatori giornalieri comprendono ID dell’installazione o del canale, tipo di evento, conteggi e date. I totali aggregati sono separati e non elencano gli ID individuali, ma non sono necessariamente anonimi in ogni contesto. Nei canali condivisi, un conteggio può derivare dall’azione di un partecipante consenziente, senza indicare il consenso di tutti i membri.</p>
   <p>L’attivazione attende la conferma del servizio. <strong>La revoca è salvata subito e interrompe la partecipazione facoltativa sul dispositivo, anche offline.</strong> Se il servizio non è raggiungibile, l’app conserva la scelta e ritenta l’aggiornamento; alcuni errori richiedono assistenza. Il servizio remoto può mantenere temporaneamente la scelta precedente e completare elaborazioni già avviate. La revoca non cancella automaticamente i conteggi storici.</p>
-  <p>Restano distinti, anche con statistiche OFF, log operativi e di sicurezza e metriche su richieste, errori, prestazioni e costi. I fornitori possono trattare IP e dati di rete; l’IP non fa parte del profilo del dispositivo. Nei percorsi verificati non sono attivi SDK pubblicitari o servizi esterni di analytics/crash reporting. Le notifiche dell’app sono locali.</p>
+  <p>Restano distinti, anche con statistiche OFF, log operativi e di sicurezza e metriche su richieste, errori, prestazioni e costi. I fornitori possono trattare IP e dati di rete; l’IP non fa parte del profilo del dispositivo. Non sono attivi SDK pubblicitari o servizi dedicati di crash reporting. Su Android, Google ML Kit può trasmettere a Google dati tecnici e metriche del proprio funzionamento, come descritto nella sezione 9. Questa telemetria è distinta dalle statistiche facoltative di Tickness e non è controllata dal relativo interruttore nelle Impostazioni. Le notifiche dell’app sono locali.</p>
   </section>
   <section aria-labelledby="controller">
   <h2 id="controller">8. Titolare del trattamento</h2>
@@ -112,6 +112,8 @@
   <p><strong>AWS</strong> ospita Sync, profili dei dispositivi, contenuti dei link, statistiche autorizzate e servizi tecnici di Tickness. La regione applicativa è Francoforte, Germania (UE). AWS non è l’archivio personale principale né il servizio di backup dell’utente. I destinatari dei link e i partecipanti autorizzati ai canali ricevono i dati condivisi.</p>
   <p>Per i dati trattati per conto del cliente, AWS opera come responsabile secondo il <a href="https://d1.awsstatic.com/legal/aws-dpa/aws-dpa.pdf">Data Processing Addendum</a>, incorporato nei <a href="https://aws.amazon.com/service-terms/">termini del servizio</a> nei casi previsti. Per propri dati di account e servizio può agire come titolare autonomo secondo l’<a href="https://aws.amazon.com/privacy/">informativa AWS</a>. La regione europea non esclude trasferimenti fuori dal SEE: i termini pubblici prevedono clausole contrattuali standard ove applicabili, salvo altri meccanismi riconosciuti. Puoi chiedere al titolare informazioni e copia delle garanzie pertinenti.</p>
   <p><strong>Gmail</strong> è utilizzato per gestire email di assistenza e privacy, con indirizzi, messaggi, allegati e dati di comunicazione. Google tratta i dati del servizio secondo le proprie <a href="https://policies.google.com/privacy?hl=it">Norme sulla privacy</a>, come titolare per le proprie finalità. La sua infrastruttura è globale; le <a href="https://policies.google.com/privacy/frameworks?hl=it">garanzie sui trasferimenti internazionali</a> comprendono decisioni di adeguatezza, Data Privacy Framework e clausole contrattuali standard, secondo il trasferimento interessato.</p>
+  <p><strong>Google ML Kit su Android.</strong> Tickness utilizza ML Kit per leggere i codici QR degli inviti Sync. Le immagini e il contenuto riconosciuto vengono elaborati sul dispositivo e non sono inviati a Google da ML Kit. Se utilizzi l’invito per aderire a un canale, le informazioni necessarie sono trasmesse al servizio Sync.</p>
+  <p>Lo SDK può inviare a Google identificativi per installazione, informazioni sul dispositivo e sulla versione dell’app, eventi di funzionamento, errori e metriche delle prestazioni. Google utilizza queste informazioni per analizzare, mantenere e migliorare le API e individuare abusi. Le comunicazioni descritte da Google sono protette tramite HTTPS. Per maggiori informazioni consulta la <a href="https://developers.google.com/ml-kit/android-data-disclosure">documentazione privacy di ML Kit</a> e le <a href="https://policies.google.com/privacy?hl=it">Norme sulla privacy di Google</a>.</p>
   <p><strong>Altri servizi scelti:</strong> Google Drive, iCloud, calendario, riconoscimento vocale, mappe e condivisione seguono le condizioni dei rispettivi fornitori; consulta anche l’<a href="https://www.apple.com/legal/privacy/">informativa Apple</a>. I backup personali sono separati dalla casella Gmail del titolare. I dati possono essere comunicati alle autorità quando richiesto dalla legge.</p>
   </section>
   <section aria-labelledby="retention">
@@ -128,6 +130,7 @@
   <li><strong>Backup personali:</strong> secondo impostazioni e regole di Google Drive o iCloud, comprese versioni e cestini; nessuna scadenza è imposta dall’app.</li>
   <li><strong>Email:</strong> per gestire la richiesta e i seguiti; successivamente, solo quanto necessario per obblighi applicabili o tutela di diritti. La rimozione è manuale, secondo le regole di Gmail.</li>
   </ul>
+  <p>Le durate sopra indicate per i dati conservati da Tickness non si applicano automaticamente alla telemetria ML Kit o all’audio eventualmente trattato dal fornitore del riconoscimento vocale. Per questi trattamenti si applicano le informazioni e i criteri di conservazione dei rispettivi fornitori.</p>
   <p>Offline, errori di autenticazione o appartenenze cloud ancora attive possono ritardare la cancellazione del profilo; se il problema persiste, contatta il titolare. La cancellazione del profilo non elimina automaticamente contenuti Sync, copie dei partecipanti o altri riferimenti all’ID. I dati senza una scadenza automatica vengono conservati finché necessari al funzionamento del servizio e possono essere rimossi manualmente, nel rispetto dei diritti degli utenti.</p>
   <p>Non sono configurati backup aggiuntivi nelle funzionalità AWS esaminate. Eventuali copie infrastrutturali del fornitore sono distinte dai backup personali: le scadenze sopra indicate non ne assicurano la rimozione simultanea. Le richieste di cancellazione o limitazione devono essere considerate anche in caso di ripristino.</p>
   </section>
@@ -154,6 +157,6 @@
   <p>L’informativa è disponibile sul sito tickness.com e nell’app. Le modifiche sostanziali saranno comunicate con modalità adeguate.</p>
   </section>
   </main>
-  <footer><p>Data di efficacia: 2 novembre 2026. Ultimo aggiornamento: 2 novembre 2026. Versione di riferimento: 2.14.0+100.</p><p><a href="https://tickness.com/">Torna a tickness.com</a></p></footer>
+  <footer><p>Data di efficacia: 2 novembre 2026. Ultimo aggiornamento: 4 novembre 2026. Versione di riferimento: 2.14.0+100.</p><p><a href="https://tickness.com/">Torna a tickness.com</a></p></footer>
 </body>
 </html>
